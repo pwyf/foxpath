@@ -87,8 +87,4 @@ def generate_mappings():
     def exist(activity, groups):
         return exist_check(activity, groups[0]) 
 
-    @add('(.*)')
-    def fail(line):
-        return None
-
     return mappings
