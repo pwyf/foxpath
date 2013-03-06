@@ -1,3 +1,12 @@
+
+#  FoXPath, tools for processing FoXPath test suites,
+#  by Martin Keegan, Mark Brough and Ben Webb
+
+#  Copyright (C) 2013  Martin Keegan
+#
+#  This programme is free software; you may redistribute and/or modify
+#  it under the terms of the GNU Affero General Public License v3.0
+
 import re
 import itertools
 import mapping
