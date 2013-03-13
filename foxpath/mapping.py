@@ -27,6 +27,14 @@ def generate_mappings():
             return fn
         return append_to_mappings
 
+    def add_partial_with_list(regex, codelist):
+        def append_to_mappings(fn):
+            def partial_fn(groups):
+                return partial(fn, codelist, groups=groups)
+            mappings.append((re.compile(regex), partial_fn))
+            return fn
+        return append_to_mappings
+
     @add('(\S*) is an? (.*)\?')
     def is_an(groups):
         if groups[1] == 'iso date':
@@ -73,6 +81,9 @@ def generate_mappings():
     def exist_check(activity, xpath):
         return bool(rm_blank(activity.xpath(xpath)))
 
+    def exist_check_list(activity, xpath, codelist):
+        return rm_blank(activity.xpath(xpath)) in codelist
+
     @add_partial('only one of (\S*) or (\S*) exists\?')
     def exist_xor(activity, groups):
         return (exist_check(activity, groups[0]) != 
@@ -86,5 +97,9 @@ def generate_mappings():
     @add_partial('(\S*) exists\?') 
     def exist(activity, groups):
         return exist_check(activity, groups[0]) 
+
+    @add_partial_with_list('(\S*) is on list\?') 
+    def exist(activity, codelist, groups):
+        return exist_check_list(activity, groups[0], codelist) 
 
     return mappings
