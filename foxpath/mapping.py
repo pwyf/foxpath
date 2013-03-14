@@ -27,10 +27,10 @@ def generate_mappings():
             return fn
         return append_to_mappings
 
-    def add_partial_with_list(regex, codelist):
+    def add_partial_with_list(regex):
         def append_to_mappings(fn):
             def partial_fn(groups):
-                return partial(fn, codelist, groups=groups)
+                return partial(fn, groups=groups)
             mappings.append((re.compile(regex), partial_fn))
             return fn
         return append_to_mappings
@@ -82,7 +82,10 @@ def generate_mappings():
         return bool(rm_blank(activity.xpath(xpath)))
 
     def exist_check_list(activity, xpath, codelist):
-        return rm_blank(activity.xpath(xpath)) in codelist
+        try:
+            return bool(str(activity.xpath(xpath)[0]) in codelist)
+        except Exception:
+            return False
 
     @add_partial('only one of (\S*) or (\S*) exists\?')
     def exist_xor(activity, groups):
@@ -98,8 +101,8 @@ def generate_mappings():
     def exist(activity, groups):
         return exist_check(activity, groups[0]) 
 
-    @add_partial_with_list('(\S*) is on list\?') 
-    def exist(activity, codelist, groups):
-        return exist_check_list(activity, groups[0], codelist) 
+    @add_partial_with_list('(\S*) is on list (\S*)\?') 
+    def exist_list(data, groups):
+        return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
 
     return mappings
