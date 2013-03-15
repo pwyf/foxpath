@@ -8,6 +8,7 @@
 #  it under the terms of the GNU Affero General Public License v3.0
 
 import re
+import datetime
 from functools import partial
 
 def generate_mappings():
@@ -82,10 +83,37 @@ def generate_mappings():
         return bool(rm_blank(activity.xpath(xpath)))
 
     def exist_check_list(activity, xpath, codelist):
+        outcome = False
         try:
-            return bool(str(activity.xpath(xpath)[0]) in codelist)
+            if bool(str(activity.xpath(xpath)[0]) in codelist):
+                outcome = True  
+            elif bool(str(activity.xpath(xpath)[0]).lowercase in codelist):
+                outcome = True 
+            elif bool(str(activity.xpath(xpath)[0]).uppercase in codelist):
+                outcome = True
         except Exception:
             return False
+
+    def x_months_ago_check(activity, xpath, months, many=False):
+        outcome = False
+        months = int(months)
+        current_date = datetime.datetime.utcnow()
+        if many:
+            for check in activity.findall(many):
+                try:
+                    if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d")) 
+                        < (datetime.timedelta(days=(30*months)))):
+                        outcome = True
+                except IndexError:
+                    pass
+        else:
+            try:
+                if ((current_date-(datetime.datetime.strptime(activity.xpath(xpath)[0], "%Y-%m-%d")))
+                        < (datetime.timedelta(days=(30*months)))):
+                    outcome = True
+            except IndexError:
+                pass
+        return outcome                
 
     @add_partial('only one of (\S*) or (\S*) exists\?')
     def exist_xor(activity, groups):
@@ -104,5 +132,10 @@ def generate_mappings():
     @add_partial_with_list('(\S*) is on list (\S*)\?') 
     def exist_list(data, groups):
         return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
+
+    @add_partial('(\S*) or (\S*) \(for each (\S*)\) is less than (\S*) months? ago\?')
+    def less_than_x_months_ago(activity, groups):
+        return (x_months_ago_check(activity, groups[0], groups[3]) or 
+                x_months_ago_check(activity, groups[1], groups[3], groups[2]))
 
     return mappings
