@@ -91,6 +91,7 @@ def generate_mappings():
                 outcome = True 
             elif bool(str(activity.xpath(xpath)[0]).uppercase in codelist):
                 outcome = True
+            return outcome
         except Exception:
             return False
 
