@@ -13,12 +13,6 @@ import mapping
 
 class TestSyntaxError(Exception): pass
 
-comment = re.compile('#')
-blank = re.compile('^$')
-
-def ignore_line(line):
-    return bool(comment.match(line) or blank.match(line))
-
 def generate_test_functions(tests):
     mappings = mapping.generate_mappings()
 
@@ -29,9 +23,6 @@ def generate_test_functions(tests):
     first_true = lambda tupl: bool(tupl.__getitem__(0))
 
     test_functions = {}
-
-    tests = itertools.ifilter(lambda test: test.test_level == 1, tests)
-    tests = itertools.ifilter(lambda test: not ignore_line(test.name), tests)
 
     def function_for_test(test):
         line = test.name
