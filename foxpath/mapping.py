@@ -139,4 +139,9 @@ def generate_mappings():
         return (x_months_ago_check(activity, groups[0], groups[3]) or 
                 x_months_ago_check(activity, groups[1], groups[3], groups[2]))
 
+    @add_partial('(\S*) or (\S*) is less than (\S*) months? ago\?')
+    def less_than_x_months_ago(activity, groups):
+        return (x_months_ago_check(activity, groups[0], groups[2]) or 
+                x_months_ago_check(activity, groups[1], groups[2]))
+
     return mappings
