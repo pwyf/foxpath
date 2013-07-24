@@ -82,6 +82,27 @@ def generate_mappings():
     def exist_check(activity, xpath):
         return bool(rm_blank(activity.xpath(xpath)))
 
+    def check_value_is(activity, xpath, value):
+        # This is slightly odd. If there is no value provided,
+        # we should return True, in the same way as if the value
+        # is provided, we would return True only if it's the 
+        # expected value.
+        # But it works for what we're trying to do right now
+        if not exist_check(activity, xpath):
+            return True
+        if rm_blank(activity.xpath(xpath)[0]) == value:
+            return True
+        return False
+
+    def check_value_gte(activity, xpath, amount):
+        # This is slightly odd. If there is no value provided,
+        # we should return True, in the same way as if the value
+        # is provided, we would return True only if it's the 
+        # expected value.
+        if not bool(rm_blank(activity.xpath(xpath))):
+            return True
+        return bool(int(rm_blank(activity.xpath(xpath)[0])) >= int(amount))
+
     def exist_check_list(activity, xpath, codelist):
         outcome = False
         try:
@@ -153,5 +174,45 @@ def generate_mappings():
                 x_months_ago_check(activity, groups[2], groups[6]) or 
                 x_months_ago_check(activity, groups[3], groups[6]) or
                 x_months_ago_check(activity, groups[4], groups[6], groups[5]))
+
+    ## Conditional tests (only run if something)
+    
+    @add_partial('(\S*) exists\? \(if (\S*) is at least (\S*)\)') 
+    def exist_if_gte(activity, groups):
+        if check_value_gte(activity, groups[1], groups[2]):
+            return exist_check(activity, groups[0])
+        else:
+            return None
+
+    @add_partial('(\S*) or (\S*) exists\? \(if (\S*) is at least (\S*)\)') 
+    def exist_or_if_gte(activity, groups):
+        if check_value_gte(activity, groups[2], groups[3]):
+            return (exist_check(activity, groups[0]) or 
+                    exist_check(activity, groups[1]))
+        else:
+            return None
+
+    @add_partial('(\S*) exists\? \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)') 
+    def exist_if_both(activity, groups):
+        if (check_value_gte(activity, groups[1], groups[2]) and not (check_value_is(activity, groups[3], groups[4]))):
+            return exist_check(activity, groups[0])
+        else:
+            return None
+
+    @add_partial('(\S*) exists\? \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)') 
+    def exist_if_both_or(activity, groups):
+        if (check_value_gte(activity, groups[1], groups[2]) and not (check_value_is(activity, groups[3], groups[5]) or check_value_is(activity, groups[4], groups[5]))):
+            return exist_check(activity, groups[0])
+        else:
+            return None
+
+
+    @add_partial('(\S*) or (\S*) exists\? \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)') 
+    def exist_or_if_both(activity, groups):
+        if (check_value_gte(activity, groups[2], groups[3]) and not (check_value_is(activity, groups[4], groups[5]) or check_value_is(activity, groups[4], groups[5]))):
+            return (exist_check(activity, groups[0]) or 
+                    exist_check(activity, groups[1]))
+        else:
+            return None
 
     return mappings
