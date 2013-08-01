@@ -82,25 +82,28 @@ def generate_mappings():
     def exist_check(activity, xpath):
         return bool(rm_blank(activity.xpath(xpath)))
 
-    def check_value_is(activity, xpath, value):
+    def check_value_is(activity, xpath, value, default):
         # This is slightly odd. If there is no value provided,
-        # we should return True, in the same way as if the value
-        # is provided, we would return True only if it's the 
-        # expected value.
-        # But it works for what we're trying to do right now
+        # we should return what the expression would like us
+        # to say.
+        # e.g. if there is no aid type, then you might want
+        # to include this activity anyway, rather
+        # than excluding it.
         if not exist_check(activity, xpath):
-            return True
+            return default
         if rm_blank(activity.xpath(xpath)[0]) == value:
             return True
         return False
 
-    def check_value_gte(activity, xpath, amount):
+    def check_value_gte(activity, xpath, amount, default):
         # This is slightly odd. If there is no value provided,
-        # we should return True, in the same way as if the value
-        # is provided, we would return True only if it's the 
-        # expected value.
+        # we should return what the expression would like us
+        # to say.
+        # e.g. if there is no activity status, then you might 
+        # want to include this activity anyway, rather
+        # than excluding it.
         if not bool(rm_blank(activity.xpath(xpath))):
-            return True
+            return default
         return bool(int(rm_blank(activity.xpath(xpath)[0])) >= int(amount))
 
     def exist_check_list(activity, xpath, codelist):
@@ -179,14 +182,14 @@ def generate_mappings():
     
     @add_partial('(\S*) exists\? \(if (\S*) is at least (\S*)\)') 
     def exist_if_gte(activity, groups):
-        if check_value_gte(activity, groups[1], groups[2]):
+        if check_value_gte(activity, groups[1], groups[2], True):
             return exist_check(activity, groups[0])
         else:
             return None
 
     @add_partial('(\S*) or (\S*) exists\? \(if (\S*) is at least (\S*)\)') 
     def exist_or_if_gte(activity, groups):
-        if check_value_gte(activity, groups[2], groups[3]):
+        if check_value_gte(activity, groups[2], groups[3], True):
             return (exist_check(activity, groups[0]) or 
                     exist_check(activity, groups[1]))
         else:
@@ -194,14 +197,14 @@ def generate_mappings():
 
     @add_partial('(\S*) exists\? \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)') 
     def exist_if_both(activity, groups):
-        if (check_value_gte(activity, groups[1], groups[2]) and not (check_value_is(activity, groups[3], groups[4]))):
+        if (check_value_gte(activity, groups[1], groups[2], True) and not (check_value_is(activity, groups[3], groups[4], False))):
             return exist_check(activity, groups[0])
         else:
             return None
 
     @add_partial('(\S*) exists\? \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)') 
     def exist_if_both_or(activity, groups):
-        if (check_value_gte(activity, groups[1], groups[2]) and not (check_value_is(activity, groups[3], groups[5]) or check_value_is(activity, groups[4], groups[5]))):
+        if (check_value_gte(activity, groups[1], groups[2], True) and not (check_value_is(activity, groups[3], groups[5], False) or check_value_is(activity, groups[4], groups[5], False))):
             return exist_check(activity, groups[0])
         else:
             return None
@@ -209,7 +212,7 @@ def generate_mappings():
 
     @add_partial('(\S*) or (\S*) exists\? \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)') 
     def exist_or_if_both(activity, groups):
-        if (check_value_gte(activity, groups[2], groups[3]) and not (check_value_is(activity, groups[4], groups[5]) or check_value_is(activity, groups[4], groups[5]))):
+        if (check_value_gte(activity, groups[2], groups[3], True) and not (check_value_is(activity, groups[4], groups[5], False) or check_value_is(activity, groups[4], groups[5], False))):
             return (exist_check(activity, groups[0]) or 
                     exist_check(activity, groups[1]))
         else:
