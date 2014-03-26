@@ -110,18 +110,35 @@ def generate_mappings():
             return default
         return bool(int(rm_blank(activity.xpath(xpath)[0])) >= int(amount))
 
+    def exist_check_two_list(activity, xpath_one, xpath_two, codelist):
+        outcome = False
+        data = activity.xpath(xpath_one)+activity.xpath(xpath_two)
+        for d in data:
+            try:
+                if bool(str(d) in codelist):
+                    outcome = True  
+                elif bool(str(d).lowercase in codelist):
+                    outcome = True 
+                elif bool(str(d).uppercase in codelist):
+                    outcome = True
+                return outcome
+            except Exception:
+                return False
+
     def exist_check_list(activity, xpath, codelist):
         outcome = False
-        try:
-            if bool(str(activity.xpath(xpath)[0]) in codelist):
-                outcome = True  
-            elif bool(str(activity.xpath(xpath)[0]).lowercase in codelist):
-                outcome = True 
-            elif bool(str(activity.xpath(xpath)[0]).uppercase in codelist):
-                outcome = True
-            return outcome
-        except Exception:
-            return False
+        data = activity.xpath(xpath)
+        for d in data:
+            try:
+                if bool(str(d) in codelist):
+                    outcome = True  
+                elif bool(str(d).lowercase in codelist):
+                    outcome = True 
+                elif bool(str(d).uppercase in codelist):
+                    outcome = True
+                return outcome
+            except Exception:
+                return False
 
     def x_months_ago_check(activity, xpath, months, many=False):
         outcome = False
@@ -161,6 +178,10 @@ def generate_mappings():
     @add_partial_with_list('(\S*) is on list (\S*)\?') 
     def exist_list(data, groups):
         return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
+
+    @add_partial_with_list('at least one of \((\S*) or (\S*)\) is on list (\S*)\?')
+    def atleastone_x_y_on_list_z(data, groups):
+        return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
 
     @add_partial('(\S*) or (\S*) \(for each (\S*)\) is less than (\S*) months? ago\?')
     def less_than_x_months_ago(activity, groups):
