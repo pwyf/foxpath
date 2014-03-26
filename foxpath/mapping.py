@@ -71,6 +71,10 @@ def generate_mappings():
                            0)
                    == float(groups[1]))
 
+    @add_partial('(\S*) starts with (\S*)\?')
+    def x_startswith_y(activity, groups):
+        return groups[0].startswith(groups[1])
+
     @add_partial('(\S*) exists (\S*) times?\?')
     def exist_times(activity, groups):
         return len(rm_blank(activity.xpath(groups[0]))) == int(groups[1])
