@@ -197,7 +197,7 @@ def generate_mappings():
         if check_value_gte(activity, groups[3], groups[4], True):
             return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
 
-    @add_partial_with_list('at least one of \((\S*) or (\S*)\) is on list (\S*)\?')
+    @add_partial_with_list('at least one \((\S*) or (\S*)\) is on list (\S*)\?')
     def atleastone_x_y_on_list_z(data, groups):
         return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
 
@@ -252,10 +252,17 @@ def generate_mappings():
         else:
             return None
 
+    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)\?') 
+    def exist_or_if_both(activity, groups):
+        if (check_value_gte(activity, groups[2], groups[3], True) and not (check_value_is(activity, groups[4], groups[5], False))):
+            return (exist_check(activity, groups[0]) or 
+                    exist_check(activity, groups[1]))
+        else:
+            return None
 
     @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)\?') 
     def exist_or_if_both(activity, groups):
-        if (check_value_gte(activity, groups[2], groups[3], True) and not (check_value_is(activity, groups[4], groups[5], False) or check_value_is(activity, groups[4], groups[5], False))):
+        if (check_value_gte(activity, groups[2], groups[3], True) and not (check_value_is(activity, groups[4], groups[6], False) or check_value_is(activity, groups[5], groups[6], False))):
             return (exist_check(activity, groups[0]) or 
                     exist_check(activity, groups[1]))
         else:
