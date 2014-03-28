@@ -179,6 +179,10 @@ def generate_mappings():
     def exist_list(data, groups):
         return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
 
+    @add_partial_with_list('at least one of (\S*) is on list (\S*)\?') 
+    def atleastone_x_on_list_z(data, groups):
+        return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
+
     @add_partial_with_list('at least one of \((\S*) or (\S*)\) is on list (\S*)\?')
     def atleastone_x_y_on_list_z(data, groups):
         return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
