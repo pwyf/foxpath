@@ -280,14 +280,14 @@ def generate_mappings():
             return (exist_forward_qtrs(activity, groups[0], 1) or
                     exist_forward_qtrs(activity, groups[1], 1))
 
-    @add_partial_with_list('(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\?')
+    @add_partial_with_list('(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
     def x_on_list_z_cond(data, groups):
-        if check_value_gte(activity, groups[2], groups[3], True):
+        if check_value_gte(data['activity'], groups[2], groups[3], True):
             return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
 
-    @add_partial_with_list('(\S*) or (\S*) is on list (\S*) \(if (\S*) is at least (\S*)\?')
+    @add_partial_with_list('(\S*) or (\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
     def x_or_y_on_list_z_cond(data, groups):
-        if check_value_gte(activity, groups[3], groups[4], True):
+        if check_value_gte(data['activity'], groups[3], groups[4], True):
             return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
 
     @add_partial_with_list('at least one \((\S*) or (\S*)\) is on list (\S*)\?')
