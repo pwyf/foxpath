@@ -61,6 +61,7 @@ def test_doc(filename, test):
             error +=1
         elif result == None:
             notrelevant +=1
+    print test
     print "Success:", success
     print "Fail:", fail
     print "Error:", error
@@ -85,6 +86,7 @@ def test_doc_lists(filename, test, lists):
             error +=1
         elif result == None:
             notrelevant +=1
+    print test
     print "Success:", success
     print "Fail:", fail
     print "Error:", error
