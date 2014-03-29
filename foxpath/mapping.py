@@ -73,7 +73,7 @@ def generate_mappings():
 
     @add_partial('(\S*) starts with (\S*)\?')
     def x_startswith_y(activity, groups):
-        return groups[0].startswith(groups[1])
+        return activity.xpath(groups[0])[0].startswith(activity.xpath(groups[1])[0])
 
     @add_partial('(\S*) exists (\S*) times?\?')
     def exist_times(activity, groups):
@@ -140,12 +140,89 @@ def generate_mappings():
             except Exception:
                 return False
 
+    def get_forward_date(end_dates, default_date):
+        latest_date = datetime.datetime.strptime(default_date, "%Y-%m-%d")
+
+        def get_latest(end_dates):
+            if len(end_dates)==2:
+                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
+                    return end_dates[1]
+                else:
+                    return end_dates[0]
+            elif len(end_dates)==1:
+                return end_dates[0]
+
+        latest_end_date=get_latest(end_dates)
+        if latest_end_date:
+            if (datetime.datetime.strptime(latest_end_date, "%Y-%m-%d") < datetime.datetime.strptime(default_date, "%Y-%m-%d")):
+                return latest_end_date
+        return default_date
+
+    def date_gte_than(the_dates, later_date):
+        for the_date in the_dates:
+            if (datetime.datetime.strptime(the_date, "%Y-%m-%d") >= datetime.datetime.strptime(later_date, "%Y-%m-%d")):
+                return True
+        return False
+
+    def exist_forward(activity, xpath):
+        # Check if any corresponding xpath is later than Dec 2014. If the
+        # activity ended earlier than Dec 2014, then it will be ignored.
+        default_date="2014-12-31"
+        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
+        end_date = get_forward_date(end_dates, default_date)
+
+        if mkdate(end_date) < mkdate(default_date):
+            return None
+
+        # Check if xpath (budget, planned-disbursement available for one year before the end date.
+        element = activity.xpath(xpath)
+        for e in element:
+            if date_gte_than(e.xpath('period-end/@iso-date'), end_date):
+                return True
+        return False
+
+    def twelve_months_before(end_date):
+        newdate = datetime.datetime.strptime(end_date, "%Y-%m-%d") - datetime.timedelta(days=365)
+        return datetime.datetime.strftime(newdate, "%Y-%m-%d")
+
+    def mkdate(date):
+        return datetime.datetime.strptime(date, "%Y-%m-%d")
+
+    def check_fwd_within_scope(e, xpath, start_date, end_date):
+        if ((mkdate(start_date) <= mkdate(e.xpath('period-end/@iso-date')[0])
+                and (mkdate(e.xpath('period-end/@iso-date')[0]) <= mkdate(end_date)))):
+            return True
+        return False
+
+    def exist_forward_qtrs(activity, xpath, qtrs):
+        # Check, for period 12 months prior to Dec 2014
+        # whether forward budgets are available.
+        # Check whether at least {qtrs} elements are available in 12 months
+        # before the relevant end date.
+        # Used both for `forward` (>=1 elements) and `forward by quarters`
+        # (>=3 elements) tests.
+        default_date="2014-12-31"
+        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
+        end_date = get_forward_date(end_dates, default_date)
+
+        if mkdate(end_date) < mkdate(default_date):
+            return None
+
+        start_date = twelve_months_before(end_date)
+        count = 0
+        for element in activity.xpath(xpath):
+            if check_fwd_within_scope(element, xpath, start_date, end_date):
+                count +=1
+        if count >=qtrs:
+            return True
+        return False
+
     def x_months_ago_check(activity, xpath, months, many=False):
         outcome = False
         months = int(months)
         current_date = datetime.datetime.utcnow()
         if many:
-            for check in activity.findall(many):
+            for check in activity.xpath(many):
                 try:
                     if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d")) 
                         < (datetime.timedelta(days=(30*months)))):
@@ -159,7 +236,7 @@ def generate_mappings():
                     outcome = True
             except IndexError:
                 pass
-        return outcome                
+        return outcome
 
     @add_partial('only one of (\S*) or (\S*) exists\?')
     def exist_xor(activity, groups):
@@ -170,6 +247,10 @@ def generate_mappings():
     def exist_or(activity, groups):
         return (exist_check(activity, groups[0]) or 
                 exist_check(activity, groups[1]))
+
+    @add_partial('(\S*) is (\S*)\?')
+    def x_is_y(activity, groups):
+        return check_value_is(activity, groups[0], groups[1], False)
 
     @add_partial('(\S*) exists\?') 
     def exist(activity, groups):
@@ -186,6 +267,18 @@ def generate_mappings():
     @add_partial_with_list('(\S*) or (\S*) is on list (\S*)\?')
     def x_or_y_on_list_z(data, groups):
         return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
+
+    @add_partial('(\S*) or (\S*) is available forward by quarters \(if (\S*) is at least (\S*)\)\?')
+    def x_on_list_z_cond(activity, groups):
+        if check_value_gte(activity, groups[2], groups[3], True):
+            return (exist_forward_qtrs(activity, groups[0], 3) or
+                    exist_forward_qtrs(activity, groups[1], 3))
+
+    @add_partial('(\S*) or (\S*) is available forward \(if (\S*) is at least (\S*)\)\?')
+    def x_on_list_z_cond(activity, groups):
+        if check_value_gte(activity, groups[2], groups[3], True):
+            return (exist_forward_qtrs(activity, groups[0], 1) or
+                    exist_forward_qtrs(activity, groups[1], 1))
 
     @add_partial_with_list('(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\?')
     def x_on_list_z_cond(data, groups):
