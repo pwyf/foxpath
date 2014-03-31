@@ -114,31 +114,29 @@ def generate_mappings():
         outcome = False
         data = activity.xpath(xpath_one)+activity.xpath(xpath_two)
         for d in data:
-            try:
-                if bool(str(d) in codelist):
-                    outcome = True  
-                elif bool(str(d).lowercase in codelist):
-                    outcome = True 
-                elif bool(str(d).uppercase in codelist):
-                    outcome = True
-                return outcome
-            except Exception:
-                return False
+            if bool(str(d) in codelist):
+                outcome = True  
+            elif bool(str(d).lower() in codelist):
+                outcome = True 
+            elif bool(str(d).upper() in codelist):
+                outcome = True
+            return outcome
+        return False
 
     def exist_check_list(activity, xpath, codelist):
         outcome = False
         data = activity.xpath(xpath)
         for d in data:
-            try:
-                if bool(str(d) in codelist):
-                    outcome = True  
-                elif bool(str(d).lowercase in codelist):
-                    outcome = True 
-                elif bool(str(d).uppercase in codelist):
-                    outcome = True
-                return outcome
-            except Exception:
-                return False
+            if bool(str(d) in codelist):
+                outcome = True  
+            elif bool(str(d).lower() in codelist):
+                outcome = True 
+            elif bool(str(d).upper() in codelist):
+                outcome = True
+            else:
+                outcome = False
+            return outcome
+        return False
 
     def get_forward_date(end_dates, default_date):
         latest_date = datetime.datetime.strptime(default_date, "%Y-%m-%d")
@@ -264,6 +262,11 @@ def generate_mappings():
     def atleastone_x_on_list_z(data, groups):
         return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
 
+    @add_partial_with_list('at least one (\S*) is on list (\S*) \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?') 
+    def atleastone_x_on_list_z_if_cond(data, groups):
+        if (check_value_gte(data['activity'], groups[2], groups[3], True) and not (check_value_is(data['activity'], groups[4], groups[6], False) or check_value_is(data['activity'], groups[5], groups[6], False) or check_value_is(data['activity'], groups[4], groups[7], False) or check_value_is(data['activity'], groups[5], groups[7], False))):
+            return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
+
     @add_partial_with_list('(\S*) or (\S*) is on list (\S*)\?')
     def x_or_y_on_list_z(data, groups):
         return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
@@ -341,6 +344,18 @@ def generate_mappings():
     @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)\?') 
     def exist_if_both_or(activity, groups):
         if (check_value_gte(activity, groups[1], groups[2], True) and not (check_value_is(activity, groups[3], groups[5], False) or check_value_is(activity, groups[4], groups[5], False))):
+            return exist_check(activity, groups[0])
+        else:
+            return None
+
+    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?') 
+    def exist_if_both_or(activity, groups):
+        if (check_value_gte(activity, groups[1], groups[2], True) and not (
+                check_value_is(activity, groups[3], groups[5], False) or 
+                check_value_is(activity, groups[4], groups[5], False) or 
+                check_value_is(activity, groups[3], groups[6], False) or 
+                check_value_is(activity, groups[4], groups[6], False)
+            )):
             return exist_check(activity, groups[0])
         else:
             return None
