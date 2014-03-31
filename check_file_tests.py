@@ -1,7 +1,7 @@
 import foxpath
 from foxpath import test
 #f="dfid-tz.xml"
-f='sida-tz.xml'
+f='dfid-tz.xml'
 #t='at least one (sector[@vocabulary="DAC"]/@code or sector[not(@vocabulary)]/@code) is on list Sector?'
 #t='at least one country-budget-items[@vocabulary="1"]/budget-item/@code is on list BudgetIdentifier?'
 #t="default-aid-type/@code or transaction/aid-type/@code is on list AidType (if activity-status/@code is at least 2)?"
@@ -16,13 +16,13 @@ lists={'Sector': ['13040'],
       }
 
 list_tests = ['default-aid-type/@code or transaction/aid-type/@code is on list AidType (if activity-status/@code is at least 2)?',
-         'at least one country-budget-items[@vocabulary="1"]/budget-item/@code is on list BudgetIdentifier?',
+         'at least one country-budget-items[@vocabulary="1"]/budget-item/@code is on list BudgetIdentifier (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not A01 or A02))?',
          'collaboration-type/@code is on list CollaborationType (if activity-status/@code is at least 2)?',
          'activity-status/@code is on list ActivityStatus?',
          'default-finance-type/@code or transaction/finance-type/@code is on list FinanceType (if activity-status/@code is at least 2)?',
          'default-flow-type/@code or transaction/flow-type/@code is on list FlowType (if activity-status/@code is at least 2)?',
          'at least one (sector[@vocabulary="DAC"]/@code or sector[not(@vocabulary)]/@code) is on list Sector?',
-         'default-tied-status or transaction/tied-status is on list TiedStatus (if activity-status/@code is at least 2)?',
+         'default-tied-status/@code or transaction/tied-status/@code is on list TiedStatus (if activity-status/@code is at least 2)?',
         ]
 
 nonlist_tests = [ 
@@ -30,12 +30,12 @@ nonlist_tests = [
         "document-link/category[@code='B04'] exists?",
         "document-link/category[@code='B01'] exists?",
         "document-link/category[@code='B06'] exists?",
-        "document-link/category[@code='A05'] exists (if activity-status/@code is at least 2 and (default-aid-type or transaction/aid-type is not A01))?",
-        "capital-spend exists (if activity-status/@code is at least 2 and (default-aid-type or transaction/aid-type is not A01))?",
+        "document-link/category[@code='A05'] exists (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not A01))?",
+        "capital-spend exists (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not A01 or A02))?",
         "collaboration-type exists (if activity-status/@code is at least 2)?",
         "conditions or document-link/category[@code='A04'] exists (if activity-status/@code is at least 2 and conditions/@attached is not 0)?",
         "contact-info exists?",
-        "document-link/category[@code='A06'] or document-link/category[@code='A11'] exists (if activity-status/@code is at least 2 and (default-aid-type or transaction/aid-type is not A01))?",
+        "document-link/category[@code='A06'] or document-link/category[@code='A11'] exists (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not A01))?",
         "budget or planned-disbursement is available forward (if activity-status/@code is at least 2)?",
         "budget or planned-disbursement is available forward by quarters (if activity-status/@code is at least 2)?",
         "document-link/category[@code='B03'] exists?",
@@ -55,13 +55,13 @@ nonlist_tests = [
         "participating-org[@role='Implementing'] exists (if activity-status/@code is at least 2)?",
         "location exists (if activity-status/@code is at least 2 and recipient-region/@code is not 998)?",
         "location/coordinates exists (if activity-status/@code is at least 2 and recipient-region/@code is not 998)?",
-        "document-link/category[@code='A09'] exists (if activity-status/@code is at least 2 and (default-aid-type or transaction/aid-type is not C01))?",
+        "document-link/category[@code='A09'] exists (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not C01))?",
         "document-link/category[@code='A02'] or description[@type='2'] exists (if activity-status/@code is at least 2)?",
         "document-link/category[@code='B05'] exists?",
         "document-link/category[@code='A08'] or result exists (if activity-status/@code is at least 2)?",
         "sector exists?",
         "document-link/category[@code='B02'] exists?",
-        "document-link/category[@code='A10'] exists (if activity-status/@code is at least 2 and (default-aid-type or transaction/aid-type is not A01))?",
+        "document-link/category[@code='A10'] exists (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not A01))?",
         "default-tied-status or transaction/tied-status exists (if activity-status/@code is at least 2)?",
         "title/text() exists?",
         "title/text() has more than 10 characters?",
