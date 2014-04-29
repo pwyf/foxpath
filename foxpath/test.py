@@ -88,8 +88,14 @@ def test_doc_json_out(filename, test, current_test):
     notrelevant = 0
     data['activities'] = []
     for activity in activities:
-        result = test_fn(activity)
-        current_result = current_test_fn(activity)
+        try:
+            result = test_fn(activity)
+        except Exception:
+            result = 2
+        try:
+            current_result = current_test_fn(activity)
+        except Exception:
+            current_result = 2
 
         if result == 0:
             fail +=1
