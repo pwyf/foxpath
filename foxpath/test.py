@@ -124,7 +124,10 @@ def test_doc_json_out(filename, test, current_test):
     data['summary']['fail'] = fail
     data['summary']['error'] = error
     data['summary']['not_relevant'] = notrelevant
-    data['summary']['percentage'] = float(success)/float(success+fail)*100.0
+    try:
+        data['summary']['percentage'] = float(success)/float(success+fail)*100.0
+    except ZeroDivisionError:
+        data['summary']['percentage'] = 0.00
     return data
 
 def test_doc_lists(filename, test, lists):
