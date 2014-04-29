@@ -68,6 +68,59 @@ def test_doc(filename, test):
     print "Not relevant:", notrelevant
     print "Percentage:", float(success)/float(success+fail)*100.0
 
+def result_t(result_value):
+    results = {0: "FAIL",
+               1: "PASS",
+               2: "ERROR",
+               None: "NOT-RELEVANT",
+            }
+    return results[result_value]
+
+def test_doc_json_out(filename, test, current_test):
+    data = {}
+    test_fn=generate_function(test)
+    current_test_fn = generate_function(current_test)
+    doc = etree.parse(filename)
+    activities=doc.xpath("//iati-activity")
+    success =0
+    fail = 0
+    error = 0
+    notrelevant = 0
+    data['activities'] = []
+    for activity in activities:
+        result = test_fn(activity)
+        current_result = current_test_fn(activity)
+
+        if result == 0:
+            fail +=1
+        elif result == 1:
+            success +=1
+        elif result == 2:
+            error +=1
+        elif result == None:
+            notrelevant +=1
+        
+        result_text = result_t(result)
+        current_text = result_t(current_result)
+        try:
+            iati_identifier = activity.xpath('iati-identifier/text()')[0]
+        except Exception:
+            iati_identifier = "Unknown"
+        activitydata = {
+                    'iati-identifier': iati_identifier,
+                    'result': result_text,
+                    'current-result': current_text,
+                       }
+        data['activities'].append(activitydata)
+
+    data['summary'] = {}
+    data['summary']['success'] = success
+    data['summary']['fail'] = fail
+    data['summary']['error'] = error
+    data['summary']['not_relevant'] = notrelevant
+    data['summary']['percentage'] = float(success)/float(success+fail)*100.0
+    return data
+
 def test_doc_lists(filename, test, lists):
     test_fn=generate_function(test)
     doc = etree.parse(filename)
