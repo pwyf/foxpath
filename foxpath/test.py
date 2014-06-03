@@ -76,7 +76,12 @@ def result_t(result_value):
             }
     return results[result_value]
 
-def test_doc_json_out(filename, test, current_test):
+def binary_test(test_name):
+    if re.compile("(.*) is on list (.*)").match(test_name):
+        return True
+    return False
+
+def test_doc_json_out(filename, test, current_test, lists=None):
     data = {}
     test_fn=generate_function(test)
     current_test_fn = generate_function(current_test)
@@ -89,7 +94,10 @@ def test_doc_json_out(filename, test, current_test):
     data['activities'] = []
     for activity in activities:
         try:
-            result = test_fn(activity)
+            if binary_test(test):
+                result = test_fn(activity, lists)
+            else:
+                result = test_fn(activity)
         except Exception:
             result = 2
         try:
