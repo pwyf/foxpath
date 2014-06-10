@@ -95,7 +95,7 @@ def test_doc_json_out(filename, test, current_test, lists=None):
     for activity in activities:
         try:
             if binary_test(test):
-                result = test_fn(activity, lists)
+                result = test_fn({"activity": activity, "lists": lists})
             else:
                 result = test_fn(activity)
         except Exception:
