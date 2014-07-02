@@ -138,7 +138,7 @@ def generate_mappings():
             return outcome
         return False
 
-    def get_forward_date(end_dates, default_date):
+    def get_forward_date(end_dates, default_date=None):
         latest_date = datetime.datetime.strptime(default_date, "%Y-%m-%d")
 
         def get_latest(end_dates):
@@ -155,6 +155,23 @@ def generate_mappings():
             if (datetime.datetime.strptime(latest_end_date, "%Y-%m-%d") < datetime.datetime.strptime(default_date, "%Y-%m-%d")):
                 return latest_end_date
         return default_date
+
+    def get_activity_date(end_dates):
+
+        def get_latest(end_dates):     
+            if len(end_dates)==2:
+                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
+                    return end_dates[1]
+                else:
+                    return end_dates[0] 
+            elif len(end_dates)==1:
+                return end_dates[0]
+            else:
+                # There's no activity end date to compare, so have to assume
+                # it's later than 1 year from now.
+                return (datetime.datetime.now()+datetime.timedelta(days=365)).date().isoformat()
+
+        return get_latest(end_dates)
 
     def date_gte_than(the_dates, later_date):
         for the_date in the_dates:
@@ -193,26 +210,72 @@ def generate_mappings():
         return False
 
     def exist_forward_qtrs(activity, xpath, qtrs):
-        # Check, for period 12 months prior to Dec 2014
-        # whether forward budgets are available.
-        # Check whether at least {qtrs} elements are available in 12 months
-        # before the relevant end date.
-        # Used both for `forward` (>=1 elements) and `forward by quarters`
-        # (>=3 elements) tests.
-        default_date="2014-12-31"
-        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
-        end_date = get_forward_date(end_dates, default_date)
 
-        if mkdate(end_date) < mkdate(default_date):
+        # Window period is for the next 365 days. We don't want to look later
+        # than that; we're only interested in budgets that end before then.
+        window_end_date = datetime.datetime.now()+datetime.timedelta(days=358)
+        window_end_date = window_end_date.date().isoformat()
+       
+        # Window start is from today onwards. We're only interested in budgets
+        # that end after today.
+        window_start_date = datetime.datetime.now().date().isoformat()
+
+
+        # We set a maximum number of days for which a budget can last,
+        # depending on the number of quarters that should be covered.
+        if qtrs ==1:
+            # annual
+            max_days = 367
+            
+        elif qtrs == 3:
+            # quarterly
+            max_days = 94
+
+        # We get the latest date for end and start; this fn returns 365 days fwd
+        # if there are no dates (so, the same as the window end date).
+
+        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
+        end_date = get_activity_date(end_dates)
+
+        start_dates=activity.xpath('activity-date[@type="start-planned"]/@iso-date|activity-date[@type="start-actual"]/@iso-date')
+        start_date = get_activity_date(start_dates)
+      
+        def check_after(element, window_start_date):
+            if not element.xpath('period-end/@iso-date'):
+                return (mkdate(element.xpath('period-start/@iso-date')[0])
+                        >= mkdate(window_start_date))
+            return (mkdate(element.xpath('period-end/@iso-date')[0])
+                        >= mkdate(window_start_date))
+
+        def max_budget_length(element, max_days):
+            # NB this will error if there's no period-end/@iso-date
+            start = mkdate(element.xpath('period-start/@iso-date')[0])
+            end = mkdate(element.xpath('period-end/@iso-date')[0])
+            return ((end-start).days < max_days)
+
+        # If the activity ends earlier than the end of the window period, then
+        # don't penalise the donor for not having a budget (but the donor can
+        # still score for having one, as above.
+        # i.e. such an activity can pass this test, but it cannot fail it.
+
+        escape_end_date = datetime.datetime.now()+datetime.timedelta(days=177)
+        escape_end_date = escape_end_date.date().isoformat()
+    
+        if mkdate(end_date) < mkdate(escape_end_date):
             return None
 
-        start_date = twelve_months_before(end_date)
-        count = 0
+        # A budget has to be:
+        # 1) period-end after the window start date
+        # 2) a maximum number of days, depending on # of qtrs.
+
         for element in activity.xpath(xpath):
-            if check_fwd_within_scope(element, xpath, start_date, end_date):
-                count +=1
-        if count >=qtrs:
-            return True
+            if  (
+                    check_after(element, window_start_date)
+                ) and (
+                    max_budget_length(element, max_days)
+                ):
+                return True
+            
         return False
 
     def x_months_ago_check(activity, xpath, months, many=False):
