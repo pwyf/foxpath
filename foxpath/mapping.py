@@ -73,7 +73,14 @@ def generate_mappings():
 
     @add_partial('(\S*) starts with (\S*)\?')
     def x_startswith_y(activity, groups):
-        return activity.xpath(groups[0])[0].startswith(activity.xpath(groups[1])[0])
+        return activity.xpath(groups[0])[0].startswith(
+                                activity.xpath(groups[1])[0])
+
+    @add_partial('(\S*) starts with (\S*) or (\S*)\?')
+    def x_y_startswith_z(activity, groups):
+        x = activity.xpath(groups[0])[0]
+        return (x.startswith(activity.xpath(groups[1])[0]) or
+               x.startswith(activity.xpath(groups[2])[0]))
 
     @add_partial('(\S*) exists (\S*) times?\?')
     def exist_times(activity, groups):
@@ -143,7 +150,8 @@ def generate_mappings():
 
         def get_latest(end_dates):
             if len(end_dates)==2:
-                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
+                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > 
+                    datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
                     return end_dates[1]
                 else:
                     return end_dates[0]
@@ -152,7 +160,8 @@ def generate_mappings():
 
         latest_end_date=get_latest(end_dates)
         if latest_end_date:
-            if (datetime.datetime.strptime(latest_end_date, "%Y-%m-%d") < datetime.datetime.strptime(default_date, "%Y-%m-%d")):
+            if (datetime.datetime.strptime(latest_end_date, "%Y-%m-%d") < 
+                datetime.datetime.strptime(default_date, "%Y-%m-%d")):
                 return latest_end_date
         return default_date
 
@@ -160,7 +169,8 @@ def generate_mappings():
 
         def get_latest(end_dates):     
             if len(end_dates)==2:
-                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
+                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > 
+                    datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
                     return end_dates[1]
                 else:
                     return end_dates[0] 
@@ -169,7 +179,9 @@ def generate_mappings():
             else:
                 # There's no activity end date to compare, so have to assume
                 # it's later than 1 year from now.
-                return (datetime.datetime.now()+datetime.timedelta(days=365)).date().isoformat()
+                return (datetime.datetime.now() + 
+                        datetime.timedelta(days=365)
+                        ).date().isoformat()
 
         return get_latest(end_dates)
 
@@ -180,9 +192,9 @@ def generate_mappings():
         return False
 
     def exist_forward(activity, xpath):
-        # Check if any corresponding xpath is later than Dec 2014. If the
-        # activity ended earlier than Dec 2014, then it will be ignored.
-        default_date="2014-12-31"
+        # Check if any corresponding xpath is later than Nov 2015. If the
+        # activity ended earlier than Nov 2015, then it will be ignored.
+        default_date="2015-12-31"
         end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
         end_date = get_forward_date(end_dates, default_date)
 
@@ -379,6 +391,13 @@ def generate_mappings():
                 x_months_ago_check(activity, groups[2], groups[6]) or 
                 x_months_ago_check(activity, groups[3], groups[6]) or
                 x_months_ago_check(activity, groups[4], groups[6], groups[5]))
+
+    @add_partial('(\S*) or (\S*) or (\S*) \(for any (\S*)\) is less than (\S*) months? ago\?')
+    def less_than_x_months_ago(activity, groups):
+        return (x_months_ago_check(activity, groups[0], groups[4]) or 
+                x_months_ago_check(activity, groups[1], groups[4]) or
+                x_months_ago_check(activity, groups[2], groups[4],
+                                groups[3]))
 
     ## Conditional tests (only run if something)
     
