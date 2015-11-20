@@ -246,7 +246,7 @@ def generate_mappings():
         # We get the latest date for end and start; this fn returns 365 days fwd
         # if there are no dates (so, the same as the window end date).
 
-        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
+        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date|activity-date[@type="3"]/@iso-date|activity-date[@type="4"]/@iso-date')
         end_date = get_activity_date(end_dates)
 
         start_dates=activity.xpath('activity-date[@type="start-planned"]/@iso-date|activity-date[@type="start-actual"]/@iso-date')
