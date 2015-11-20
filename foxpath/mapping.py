@@ -195,7 +195,7 @@ def generate_mappings():
         # Check if any corresponding xpath is later than Nov 2015. If the
         # activity ended earlier than Nov 2015, then it will be ignored.
         default_date="2015-12-31"
-        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date')
+        end_dates=activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date|activity-date[@type="3"]/@iso-date|activity-date[@type="4"]/@iso-date')
         end_date = get_forward_date(end_dates, default_date)
 
         if mkdate(end_date) < mkdate(default_date):
