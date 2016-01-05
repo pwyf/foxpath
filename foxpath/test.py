@@ -93,6 +93,8 @@ def test_doc_json_out(filename, test, current_test, lists=None):
     notrelevant = 0
     data['activities'] = []
     for activity in activities:
+        hierarchy = activity.xpath("@hierarchy")
+        hierarchy = hierarchy[0] if hierarchy != [] else ""
         try:
             if binary_test(test):
                 result = test_fn({"activity": activity, "lists": lists})
@@ -124,6 +126,7 @@ def test_doc_json_out(filename, test, current_test, lists=None):
                     'iati-identifier': iati_identifier,
                     'result': result_text,
                     'current-result': current_text,
+                    'hierarchy': hierarchy,
                        }
         data['activities'].append(activitydata)
 
