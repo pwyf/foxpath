@@ -9,7 +9,7 @@
 
 import re
 import itertools
-import mapping
+from . import mapping
 
 class TestSyntaxError(Exception): pass
 

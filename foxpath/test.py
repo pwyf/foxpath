@@ -9,7 +9,7 @@
 
 import re
 import itertools
-import mapping
+from . import mapping
 from lxml import etree
 
 # Take the test expression and turn it into a function
@@ -61,12 +61,12 @@ def test_doc(filename, test):
             error +=1
         elif result == None:
             notrelevant +=1
-    print test
-    print "Success:", success
-    print "Fail:", fail
-    print "Error:", error
-    print "Not relevant:", notrelevant
-    print "Percentage:", float(success)/float(success+fail)*100.0
+    print(test)
+    print("Success: {}".format(success))
+    print("Fail: {}".format(fail))
+    print("Error: {}".format(error))
+    print("Not relevant: {}".format(notrelevant))
+    print("Percentage: {}".format(float(success)/float(success+fail)*100.0))
 
 def result_t(result_value):
     results = {0: "FAIL",
@@ -159,9 +159,9 @@ def test_doc_lists(filename, test, lists):
             error +=1
         elif result == None:
             notrelevant +=1
-    print test
-    print "Success:", success
-    print "Fail:", fail
-    print "Error:", error
-    print "Not relevant:", notrelevant
-    print "Percentage:", float(success)/float(success+fail)*100.0
+    print(test)
+    print("Success: {}".format(success))
+    print("Fail: {}".format(fail))
+    print("Error: {}".format(error))
+    print("Not relevant: {}".format(notrelevant))
+    print("Percentage: {}".format(float(success)/float(success+fail)*100.0))

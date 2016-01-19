@@ -1,1 +1,1 @@
-from core import generate_test_functions, TestSyntaxError
+from .core import generate_test_functions, TestSyntaxError
