@@ -73,14 +73,24 @@ def generate_mappings():
 
     @add_partial('(\S*) starts with (\S*)\?')
     def x_startswith_y(activity, groups):
-        return activity.xpath(groups[0])[0].startswith(
-                                activity.xpath(groups[1])[0])
+        x = activity.xpath(groups[0])
+        y = activity.xpath(groups[1])
+        if x == [] or y == []:
+            return False
+        return x[0].startswith(y[0])
 
     @add_partial('(\S*) starts with (\S*) or (\S*)\?')
-    def x_y_startswith_z(activity, groups):
-        x = activity.xpath(groups[0])[0]
-        return (x.startswith(activity.xpath(groups[1])[0]) or
-               x.startswith(activity.xpath(groups[2])[0]))
+    def x_startswith_y_z(activity, groups):
+        x = activity.xpath(groups[0])
+        y = activity.xpath(groups[1])
+        z = activity.xpath(groups[2])
+        if x == []:
+            return False
+        if z == []:
+            return (x[0].startswith(y[0]))
+        if y == []:
+            return (x[0].startswith(z[0]))
+        return (x[0].startswith(y[0]) or x[0].startswith(z[0]))
 
     @add_partial('(\S*) exists (\S*) times?\?')
     def exist_times(activity, groups):
