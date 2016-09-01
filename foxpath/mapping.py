@@ -127,8 +127,7 @@ def generate_mappings():
                 outcome = True 
             elif bool(str(d).upper() in codelist):
                 outcome = True
-            return outcome
-        return False
+        return outcome
 
     def exist_check_list(activity, xpath, codelist):
         outcome = False
@@ -140,10 +139,7 @@ def generate_mappings():
                 outcome = True 
             elif bool(str(d).upper() in codelist):
                 outcome = True
-            else:
-                outcome = False
-            return outcome
-        return False
+        return outcome
 
     def get_forward_date(end_dates, default_date=None):
         latest_date = datetime.datetime.strptime(default_date, "%Y-%m-%d")
