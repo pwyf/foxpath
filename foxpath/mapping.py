@@ -150,16 +150,17 @@ def generate_mappings():
         return False
 
     def every_check_list(activity, xpath, codelist):
-        outcome = False
         data = activity.xpath(xpath)
         for d in data:
             if bool(str(d) in codelist):
-                outcome = True  
+                continue
             elif bool(str(d).lower() in codelist):
-                outcome = True 
+                continue
             elif bool(str(d).upper() in codelist):
-                outcome = True
-        return outcome
+                continue
+            else:
+                return False
+        return True
 
     def get_forward_date(end_dates, default_date=None):
         latest_date = datetime.datetime.strptime(default_date, "%Y-%m-%d")
