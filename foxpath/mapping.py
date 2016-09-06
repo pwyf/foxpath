@@ -127,33 +127,21 @@ def generate_mappings():
             return default
         return bool(int(rm_blank(activity.xpath(xpath)[0])) >= int(amount))
 
-    def exist_check_lists(activity, xpaths, codelist):
-        data = []
-        for xpath in xpaths:
-            data += activity.xpath(xpath)
-        for d in data:
-            if bool(str(d) in codelist):
-                return True
-            elif bool(str(d).lower() in codelist):
-                return True
-            elif bool(str(d).upper() in codelist):
-                return True
-        return False
+    def check_lists(activity, xpaths, codelist, every=False):
+        def check_data(data, codelist):
+            for d in data:
+                d = str(d)
+                versions = [d, d.lower(), d.upper()]
+                yield any((bool(v in codelist) for v in versions))
 
-    def every_check_lists(activity, xpaths, codelist):
         data = []
         for xpath in xpaths:
             data += activity.xpath(xpath)
-        for d in data:
-            if bool(str(d) in codelist):
-                continue
-            elif bool(str(d).lower() in codelist):
-                continue
-            elif bool(str(d).upper() in codelist):
-                continue
-            else:
-                return False
-        return True
+
+        if every:
+            return all(check_data(data, codelist))
+        else:
+            return any(check_data(data, codelist))
 
     def get_forward_date(end_dates, default_date=None):
         latest_date = datetime.datetime.strptime(default_date, "%Y-%m-%d")
@@ -338,43 +326,28 @@ def generate_mappings():
     def exist(activity, groups):
         return exist_check(activity, groups[0])
 
-    @add_partial_with_list('(at least one ||every )(\S*) is on list (\S*)\?')
+    @add_partial_with_list('(at least one||every) ?(\S*) is on list (\S*)\?')
     def x_on_list_z(data, groups):
-        if groups[0].strip() == 'every':
-            return every_check_lists(data['activity'], [groups[1]], data['lists'][groups[2]])
-        else:
-            return exist_check_lists(data['activity'], [groups[1]], data['lists'][groups[2]])
+        return check_lists(data['activity'], [groups[1]], data['lists'][groups[2]], groups[0] == 'every')
 
-    @add_partial_with_list('(at least one ||every )(\S*) or (\S*) is on list (\S*)\?')
+    @add_partial_with_list('(at least one||every) ?(\S*) or (\S*) is on list (\S*)\?')
     def x_or_y_on_list_z(data, groups):
-        if groups[0].strip() == 'every':
-            return every_check_lists(data['activity'], [groups[1], groups[2]], data['lists'][groups[3]])
-        else:
-            return exist_check_lists(data['activity'], [groups[1], groups[2]], data['lists'][groups[3]])
+        return check_lists(data['activity'], [groups[1], groups[2]], data['lists'][groups[3]], groups[0] == 'every')
 
-    @add_partial_with_list('(at least one ||every )(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
+    @add_partial_with_list('(at least one||every) ?(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
     def x_on_list_z_cond(data, groups):
         if check_value_gte(data['activity'], groups[3], groups[4], True):
-            if groups[0].strip() == 'every':
-                return every_check_lists(data['activity'], [groups[1]], data['lists'][groups[2]])
-            else:
-                return exist_check_lists(data['activity'], [groups[1]], data['lists'][groups[2]])
+            return check_lists(data['activity'], [groups[1]], data['lists'][groups[2]], groups[0] == 'every')
 
-    @add_partial_with_list('(at least one ||every )(\S*) is on list (\S*) \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?')
+    @add_partial_with_list('(at least one||every) ?(\S*) is on list (\S*) \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?')
     def x_on_list_z_big_cond(data, groups):
         if (check_value_gte(data['activity'], groups[3], groups[4], True) and not (check_value_is(data['activity'], groups[5], groups[7], False) or check_value_is(data['activity'], groups[6], groups[7], False) or check_value_is(data['activity'], groups[5], groups[8], False) or check_value_is(data['activity'], groups[6], groups[8], False))):
-            if groups[0].strip() == 'every':
-                return every_check_lists(data['activity'], [groups[1]], data['lists'][groups[2]])
-            else:
-                return exist_check_lists(data['activity'], [groups[1]], data['lists'][groups[2]])
+            return check_lists(data['activity'], [groups[1]], data['lists'][groups[2]], groups[0] == 'every')
 
-    @add_partial_with_list('(at least one ||every )(\S*) or (\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
+    @add_partial_with_list('(at least one||every) ?(\S*) or (\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
     def x_or_y_on_list_z_cond(data, groups):
         if check_value_gte(data['activity'], groups[4], groups[5], True):
-            if groups[0].strip() == 'every':
-                return every_check_lists(data['activity'], [groups[1], groups[2]], data['lists'][groups[3]])
-            else:
-                return exist_check_lists(data['activity'], [groups[1], groups[2]], data['lists'][groups[3]])
+            return check_lists(data['activity'], [groups[1], groups[2]], data['lists'][groups[3]], groups[0] == 'every')
 
     @add_partial('(?:at least one )?(\S*) or (\S*) is available forward by quarters \(if (\S*) is at least (\S*)\)\?')
     def x_or_y_available_forward_qtrs_cond(activity, groups):
