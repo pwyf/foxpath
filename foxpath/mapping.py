@@ -128,18 +128,28 @@ def generate_mappings():
         return bool(int(rm_blank(activity.xpath(xpath)[0])) >= int(amount))
 
     def exist_check_two_list(activity, xpath_one, xpath_two, codelist):
-        outcome = False
-        data = activity.xpath(xpath_one)+activity.xpath(xpath_two)
+        data = activity.xpath(xpath_one) + activity.xpath(xpath_two)
         for d in data:
             if bool(str(d) in codelist):
-                outcome = True  
+                return True
             elif bool(str(d).lower() in codelist):
-                outcome = True 
+                return True
             elif bool(str(d).upper() in codelist):
-                outcome = True
-        return outcome
+                return True
+        return False
 
     def exist_check_list(activity, xpath, codelist):
+        data = activity.xpath(xpath)
+        for d in data:
+            if bool(str(d) in codelist):
+                return True
+            elif bool(str(d).lower() in codelist):
+                return True
+            elif bool(str(d).upper() in codelist):
+                return True
+        return False
+
+    def every_check_list(activity, xpath, codelist):
         outcome = False
         data = activity.xpath(xpath)
         for d in data:
@@ -297,7 +307,6 @@ def generate_mappings():
         return False
 
     def x_months_ago_check(activity, xpath, months, many=False):
-        outcome = False
         months = int(months)
         current_date = datetime.datetime.utcnow()
         if many:
@@ -305,17 +314,17 @@ def generate_mappings():
                 try:
                     if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d")) 
                         < (datetime.timedelta(days=(30*months)))):
-                        outcome = True
+                        return True
                 except IndexError:
                     pass
         else:
             try:
                 if ((current_date-(datetime.datetime.strptime(activity.xpath(xpath)[0], "%Y-%m-%d")))
                         < (datetime.timedelta(days=(30*months)))):
-                    outcome = True
+                    return True
             except IndexError:
                 pass
-        return outcome
+        return False
 
     @add_partial('only one of (\S*) or (\S*) exists\?')
     def exist_xor(activity, groups):
@@ -335,48 +344,44 @@ def generate_mappings():
     def exist(activity, groups):
         return exist_check(activity, groups[0]) 
 
-    @add_partial_with_list('(\S*) is on list (\S*)\?') 
-    def exist_list(data, groups):
+    @add_partial_with_list('every (\S*) is on list (\S*)\?')
+    def every_x_on_list_z(data, groups):
+        return every_check_list(data['activity'], groups[0], data['lists'][groups[1]])
+
+    @add_partial_with_list('(?:at least one )?(\S*) is on list (\S*)\?')
+    def x_on_list_z(data, groups):
         return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
 
-    @add_partial_with_list('at least one (\S*) is on list (\S*)\?') 
-    def atleastone_x_on_list_z(data, groups):
-        return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
-
-    @add_partial_with_list('at least one (\S*) is on list (\S*) \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?') 
-    def atleastone_x_on_list_z_if_cond(data, groups):
-        if (check_value_gte(data['activity'], groups[2], groups[3], True) and not (check_value_is(data['activity'], groups[4], groups[6], False) or check_value_is(data['activity'], groups[5], groups[6], False) or check_value_is(data['activity'], groups[4], groups[7], False) or check_value_is(data['activity'], groups[5], groups[7], False))):
-            return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
-
-    @add_partial_with_list('(\S*) or (\S*) is on list (\S*)\?')
+    @add_partial_with_list('(?:at least one )?(\S*) or (\S*) is on list (\S*)\?')
     def x_or_y_on_list_z(data, groups):
         return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
 
-    @add_partial('(\S*) or (\S*) is available forward by quarters \(if (\S*) is at least (\S*)\)\?')
-    def x_on_list_z_cond(activity, groups):
-        if check_value_gte(activity, groups[2], groups[3], True):
-            return (exist_forward_qtrs(activity, groups[0], 3) or
-                    exist_forward_qtrs(activity, groups[1], 3))
-
-    @add_partial('(\S*) or (\S*) is available forward \(if (\S*) is at least (\S*)\)\?')
-    def x_on_list_z_cond(activity, groups):
-        if check_value_gte(activity, groups[2], groups[3], True):
-            return (exist_forward_qtrs(activity, groups[0], 1) or
-                    exist_forward_qtrs(activity, groups[1], 1))
-
-    @add_partial_with_list('(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
+    @add_partial_with_list('(?:at least one )?(\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
     def x_on_list_z_cond(data, groups):
         if check_value_gte(data['activity'], groups[2], groups[3], True):
             return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
 
-    @add_partial_with_list('(\S*) or (\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
+    @add_partial_with_list('(?:at least one )?(\S*) is on list (\S*) \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?')
+    def x_on_list_z_big_cond(data, groups):
+        if (check_value_gte(data['activity'], groups[2], groups[3], True) and not (check_value_is(data['activity'], groups[4], groups[6], False) or check_value_is(data['activity'], groups[5], groups[6], False) or check_value_is(data['activity'], groups[4], groups[7], False) or check_value_is(data['activity'], groups[5], groups[7], False))):
+            return exist_check_list(data['activity'], groups[0], data['lists'][groups[1]])
+
+    @add_partial_with_list('(?:at least one )?(\S*) or (\S*) is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
     def x_or_y_on_list_z_cond(data, groups):
         if check_value_gte(data['activity'], groups[3], groups[4], True):
             return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
 
-    @add_partial_with_list('at least one \((\S*) or (\S*)\) is on list (\S*)\?')
-    def atleastone_x_y_on_list_z(data, groups):
-        return exist_check_two_list(data['activity'], groups[0], groups[1], data['lists'][groups[2]])
+    @add_partial('(?:at least one )?(\S*) or (\S*) is available forward by quarters \(if (\S*) is at least (\S*)\)\?')
+    def x_or_y_available_forward_qtrs_cond(activity, groups):
+        if check_value_gte(activity, groups[2], groups[3], True):
+            return (exist_forward_qtrs(activity, groups[0], 3) or
+                    exist_forward_qtrs(activity, groups[1], 3))
+
+    @add_partial('(?:at least one )?(\S*) or (\S*) is available forward \(if (\S*) is at least (\S*)\)\?')
+    def x_or_y_available_forward_cond(activity, groups):
+        if check_value_gte(activity, groups[2], groups[3], True):
+            return (exist_forward_qtrs(activity, groups[0], 1) or
+                    exist_forward_qtrs(activity, groups[1], 1))
 
     @add_partial('(\S*) or (\S*) \(for each (\S*)\) is less than (\S*) months? ago\?')
     def less_than_x_months_ago(activity, groups):
