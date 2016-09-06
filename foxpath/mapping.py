@@ -120,7 +120,7 @@ def generate_mappings():
         # This is slightly odd. If there is no value provided,
         # we should return what the expression would like us
         # to say.
-        # e.g. if there is no activity status, then you might 
+        # e.g. if there is no activity status, then you might
         # want to include this activity anyway, rather
         # than excluding it.
         if not bool(rm_blank(activity.xpath(xpath))):
@@ -180,7 +180,7 @@ def generate_mappings():
 
         def get_latest(end_dates):
             if len(end_dates)==2:
-                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > 
+                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") >
                     datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
                     return end_dates[1]
                 else:
@@ -190,26 +190,26 @@ def generate_mappings():
 
         latest_end_date=get_latest(end_dates)
         if latest_end_date:
-            if (datetime.datetime.strptime(latest_end_date, "%Y-%m-%d") < 
+            if (datetime.datetime.strptime(latest_end_date, "%Y-%m-%d") <
                 datetime.datetime.strptime(default_date, "%Y-%m-%d")):
                 return latest_end_date
         return default_date
 
     def get_activity_date(end_dates):
 
-        def get_latest(end_dates):     
+        def get_latest(end_dates):
             if len(end_dates)==2:
-                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") > 
+                if (datetime.datetime.strptime(end_dates[1], "%Y-%m-%d") >
                     datetime.datetime.strptime(end_dates[0], "%Y-%m-%d")):
                     return end_dates[1]
                 else:
-                    return end_dates[0] 
+                    return end_dates[0]
             elif len(end_dates)==1:
                 return end_dates[0]
             else:
                 # There's no activity end date to compare, so have to assume
                 # it's later than 1 year from now.
-                return (datetime.datetime.now() + 
+                return (datetime.datetime.now() +
                         datetime.timedelta(days=365)
                         ).date().isoformat()
 
@@ -257,7 +257,7 @@ def generate_mappings():
         # than that; we're only interested in budgets that end before then.
         window_end_date = datetime.datetime.now()+datetime.timedelta(days=358)
         window_end_date = window_end_date.date().isoformat()
-       
+
         # Window start is from today onwards. We're only interested in budgets
         # that end after today.
         window_start_date = datetime.datetime.now().date().isoformat()
@@ -268,7 +268,7 @@ def generate_mappings():
         if qtrs ==1:
             # annual
             max_days = 367
-            
+
         elif qtrs == 3:
             # quarterly
             max_days = 94
@@ -281,7 +281,7 @@ def generate_mappings():
 
         start_dates=activity.xpath('activity-date[@type="start-planned"]/@iso-date|activity-date[@type="start-actual"]/@iso-date')
         start_date = get_activity_date(start_dates)
-      
+
         def check_after(element, window_start_date):
             if not element.xpath('period-end/@iso-date'):
                 return (mkdate(element.xpath('period-start/@iso-date')[0])
@@ -302,7 +302,7 @@ def generate_mappings():
 
         escape_end_date = datetime.datetime.now()+datetime.timedelta(days=177)
         escape_end_date = escape_end_date.date().isoformat()
-    
+
         if mkdate(end_date) < mkdate(escape_end_date):
             return None
 
@@ -317,7 +317,7 @@ def generate_mappings():
                     max_budget_length(element, max_days)
                 ):
                 return True
-            
+
         return False
 
     def x_months_ago_check(activity, xpath, months, many=False):
@@ -326,7 +326,7 @@ def generate_mappings():
         if many:
             for check in activity.xpath(many):
                 try:
-                    if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d")) 
+                    if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d"))
                         < (datetime.timedelta(days=(30*months)))):
                         return True
                 except IndexError:
@@ -410,86 +410,86 @@ def generate_mappings():
 
     @add_partial('(\S*) or (\S*) \(for each (\S*)\) is less than (\S*) months? ago\?')
     def less_than_x_months_ago(activity, groups):
-        return (x_months_ago_check(activity, groups[0], groups[3]) or 
+        return (x_months_ago_check(activity, groups[0], groups[3]) or
                 x_months_ago_check(activity, groups[1], groups[3], groups[2]))
 
     @add_partial('(\S*) or (\S*) or (\S*) or (\S*) is less than (\S*) months? ago\?')
     def less_than_x_months_ago(activity, groups):
-        return (x_months_ago_check(activity, groups[0], groups[4]) or 
-                x_months_ago_check(activity, groups[1], groups[4]) or 
-                x_months_ago_check(activity, groups[2], groups[4]) or 
+        return (x_months_ago_check(activity, groups[0], groups[4]) or
+                x_months_ago_check(activity, groups[1], groups[4]) or
+                x_months_ago_check(activity, groups[2], groups[4]) or
                 x_months_ago_check(activity, groups[3], groups[4]))
 
     @add_partial('(\S*) or (\S*) or (\S*) or (\S*) or (\S*) \(for any (\S*)\) is less than (\S*) months? ago\?')
     def less_than_x_months_ago(activity, groups):
-        return (x_months_ago_check(activity, groups[0], groups[6]) or 
-                x_months_ago_check(activity, groups[1], groups[6]) or 
-                x_months_ago_check(activity, groups[2], groups[6]) or 
+        return (x_months_ago_check(activity, groups[0], groups[6]) or
+                x_months_ago_check(activity, groups[1], groups[6]) or
+                x_months_ago_check(activity, groups[2], groups[6]) or
                 x_months_ago_check(activity, groups[3], groups[6]) or
                 x_months_ago_check(activity, groups[4], groups[6], groups[5]))
 
     @add_partial('(\S*) or (\S*) or (\S*) \(for any (\S*)\) is less than (\S*) months? ago\?')
     def less_than_x_months_ago(activity, groups):
-        return (x_months_ago_check(activity, groups[0], groups[4]) or 
+        return (x_months_ago_check(activity, groups[0], groups[4]) or
                 x_months_ago_check(activity, groups[1], groups[4]) or
                 x_months_ago_check(activity, groups[2], groups[4],
                                 groups[3]))
 
     ## Conditional tests (only run if something)
-    
-    @add_partial('(\S*) exists \(if (\S*) is at least (\S*)\)\?') 
+
+    @add_partial('(\S*) exists \(if (\S*) is at least (\S*)\)\?')
     def exist_if_gte(activity, groups):
         if check_value_gte(activity, groups[1], groups[2], True):
             return exist_check(activity, groups[0])
         else:
             return None
 
-    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*)\)\?') 
+    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*)\)\?')
     def exist_or_if_gte(activity, groups):
         if check_value_gte(activity, groups[2], groups[3], True):
-            return (exist_check(activity, groups[0]) or 
+            return (exist_check(activity, groups[0]) or
                     exist_check(activity, groups[1]))
         else:
             return None
 
-    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)\?') 
+    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)\?')
     def exist_if_both(activity, groups):
         if (check_value_gte(activity, groups[1], groups[2], True) and not (check_value_is(activity, groups[3], groups[4], False))):
             return exist_check(activity, groups[0])
         else:
             return None
 
-    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)\?') 
+    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)\?')
     def exist_if_both_or(activity, groups):
         if (check_value_gte(activity, groups[1], groups[2], True) and not (check_value_is(activity, groups[3], groups[5], False) or check_value_is(activity, groups[4], groups[5], False))):
             return exist_check(activity, groups[0])
         else:
             return None
 
-    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?') 
+    @add_partial('(\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?')
     def exist_if_both_or(activity, groups):
         if (check_value_gte(activity, groups[1], groups[2], True) and not (
-                check_value_is(activity, groups[3], groups[5], False) or 
-                check_value_is(activity, groups[4], groups[5], False) or 
-                check_value_is(activity, groups[3], groups[6], False) or 
+                check_value_is(activity, groups[3], groups[5], False) or
+                check_value_is(activity, groups[4], groups[5], False) or
+                check_value_is(activity, groups[3], groups[6], False) or
                 check_value_is(activity, groups[4], groups[6], False)
             )):
             return exist_check(activity, groups[0])
         else:
             return None
 
-    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)\?') 
+    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*) and (\S*) is not (\S*)\)\?')
     def exist_or_if_both(activity, groups):
         if (check_value_gte(activity, groups[2], groups[3], True) and not (check_value_is(activity, groups[4], groups[5], False))):
-            return (exist_check(activity, groups[0]) or 
+            return (exist_check(activity, groups[0]) or
                     exist_check(activity, groups[1]))
         else:
             return None
 
-    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)\?') 
+    @add_partial('(\S*) or (\S*) exists \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*)\)\)\?')
     def exist_or_if_both(activity, groups):
         if (check_value_gte(activity, groups[2], groups[3], True) and not (check_value_is(activity, groups[4], groups[6], False) or check_value_is(activity, groups[5], groups[6], False))):
-            return (exist_check(activity, groups[0]) or 
+            return (exist_check(activity, groups[0]) or
                     exist_check(activity, groups[1]))
         else:
             return None
