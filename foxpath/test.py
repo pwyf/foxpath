@@ -43,14 +43,17 @@ def generate_function(test):
     f = function_for_test(test)
     return f
 
-def test_doc(filename, test):
-    j = test_doc_json_out(filename, test)
+def test_doc(filename, test, current_test=None, lists=None):
+    j = test_doc_json_out(filename, test, current_test, lists)
     print(test)
     print("Success: {}".format(j["summary"]["success"]))
     print("Fail: {}".format(j["summary"]["fail"]))
     print("Error: {}".format(j["summary"]["error"]))
     print("Not relevant: {}".format(j["summary"]["not_relevant"]))
     print("Percentage: {}".format(j["summary"]["percentage"]))
+
+def test_doc_lists(filename, test, lists):
+    test_doc(filename, test, None, lists)
 
 def result_t(result_value):
     results = {0: "FAIL",
@@ -128,28 +131,3 @@ def test_doc_json_out(filename, test, current_test=None, lists=None):
     except ZeroDivisionError:
         data['summary']['percentage'] = 0.00
     return data
-
-def test_doc_lists(filename, test, lists):
-    test_fn=generate_function(test)
-    doc = etree.parse(filename)
-    activities=doc.xpath("//iati-activity")
-    success =0
-    fail = 0
-    error = 0
-    notrelevant = 0
-    for activity in activities:
-        result = test_fn({'activity': activity, 'lists': lists})
-        if result == 0:
-            fail +=1
-        elif result == 1:
-            success +=1
-        elif result == 2:
-            error +=1
-        elif result == None:
-            notrelevant +=1
-    print(test)
-    print("Success: {}".format(success))
-    print("Fail: {}".format(fail))
-    print("Error: {}".format(error))
-    print("Not relevant: {}".format(notrelevant))
-    print("Percentage: {}".format(float(success)/float(success+fail)*100.0))
