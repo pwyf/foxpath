@@ -6,5 +6,6 @@ f="dfid-tz.xml"
 #t="conditions or document-link/category[@code='A04'] exists (if activity-status/@code is at least 2 and conditions/@attached is not 0)?"
 #t="budget or planned-disbursement is available forward (if activity-status/@code is at least 2)?"
 #t="budget or planned-disbursement is available forward by quarters (if activity-status/@code is at least 2)?"
+#t="participating-org/@type is an integer?"
 t="capital-spend exists (if activity-status/@code is at least 2 and (default-aid-type/@code or transaction/aid-type/@code is not A01 or A02))?"
 test.test_doc(f,t)

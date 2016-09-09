@@ -48,7 +48,7 @@ def generate_mappings():
                 return reduce(lambda x,y: x and y,
                             map(lambda x: int_check(x),
                                     activity.xpath(groups[0])),
-                            False)
+                            True)
             return is_an_integer
 
     @add_partial('(\S*) has more than (\S*) characters\?')
