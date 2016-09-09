@@ -17,7 +17,6 @@ def generate_mappings():
     def add(regex):
         def append_to_mappings(fn):
             mappings.append((re.compile(regex),fn))
-            return fn
         return append_to_mappings
 
     def add_partial(regex):
@@ -25,7 +24,6 @@ def generate_mappings():
             def partial_fn(groups):
                 return partial(fn, groups=groups)
             mappings.append((re.compile(regex), partial_fn))
-            return fn
         return append_to_mappings
 
     def add_partial_with_list(regex):
@@ -33,7 +31,6 @@ def generate_mappings():
             def partial_fn(groups):
                 return partial(fn, groups=groups)
             mappings.append((re.compile(regex), partial_fn))
-            return fn
         return append_to_mappings
 
     @add('(\S*) is an? (.*)\?')
