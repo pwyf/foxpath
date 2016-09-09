@@ -14,11 +14,6 @@ from functools import partial
 def generate_mappings():
     mappings = []
 
-    def add(regex):
-        def append_to_mappings(fn):
-            mappings.append((re.compile(regex),fn))
-        return append_to_mappings
-
     def add_partial(regex):
         def append_to_mappings(fn):
             def partial_fn(groups, lists):
@@ -33,8 +28,8 @@ def generate_mappings():
             mappings.append((re.compile(regex), partial_fn))
         return append_to_mappings
 
-    @add('(\S*) is an? (.*)\?')
-    def is_an(groups, lists):
+    @add_partial('(\S*) is an? (.*)\?')
+    def is_an(activity, groups):
         if groups[1] == 'iso date':
             return None
         elif groups[1] == 'integer':
@@ -44,12 +39,10 @@ def generate_mappings():
                     return True
                 except ValueError:
                     return False
-            def is_an_integer(activity):
-                return reduce(lambda x,y: x and y,
-                            map(lambda x: int_check(x),
-                                    activity.xpath(groups[0])),
-                            True)
-            return is_an_integer
+            return reduce(lambda x,y: x and y,
+                        map(lambda x: int_check(x),
+                                activity.xpath(groups[0])),
+                        True)
 
     @add_partial('(\S*) has more than (\S*) characters\?')
     def text_chars(activity, groups):
