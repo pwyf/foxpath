@@ -21,20 +21,20 @@ def generate_mappings():
 
     def add_partial(regex):
         def append_to_mappings(fn):
-            def partial_fn(groups):
+            def partial_fn(groups, lists):
                 return partial(fn, groups=groups)
             mappings.append((re.compile(regex), partial_fn))
         return append_to_mappings
 
     def add_partial_with_list(regex):
         def append_to_mappings(fn):
-            def partial_fn(groups):
-                return partial(fn, groups=groups)
+            def partial_fn(groups, lists):
+                return partial(fn, groups=groups, lists=lists)
             mappings.append((re.compile(regex), partial_fn))
         return append_to_mappings
 
     @add('(\S*) is an? (.*)\?')
-    def is_an(groups):
+    def is_an(groups, lists):
         if groups[1] == 'iso date':
             return None
         elif groups[1] == 'integer':
@@ -324,24 +324,24 @@ def generate_mappings():
         return exist_check(activity, groups[0])
 
     @add_partial_with_list('(at least one||every) ?(\S*)(?: or (\S*))? is on list (\S*)\?')
-    def x_on_list_z(data, groups):
+    def x_on_list_z(activity, groups, lists):
         expressions = [groups[1]]
         if groups[2]:
             expressions.append(groups[2])
-        return check_lists(data['activity'], expressions, data['lists'][groups[3]], groups[0] == 'every')
+        return check_lists(activity, expressions, lists[groups[3]], groups[0] == 'every')
 
     @add_partial_with_list('(at least one||every) ?(\S*)(?: or (\S*))? is on list (\S*) \(if (\S*) is at least (\S*)\)\?')
-    def x_on_list_z_cond(data, groups):
+    def x_on_list_z_cond(activity, groups, lists):
         expressions = [groups[1]]
         if groups[2]:
             expressions.append(groups[1])
-        if check_value_gte(data['activity'], groups[4], groups[5], True):
-            return check_lists(data['activity'], expressions, data['lists'][groups[3]], groups[0] == 'every')
+        if check_value_gte(activity, groups[4], groups[5], True):
+            return check_lists(activity, expressions, lists[groups[3]], groups[0] == 'every')
 
     @add_partial_with_list('(at least one||every) ?(\S*) is on list (\S*) \(if (\S*) is at least (\S*) and \((\S*) or (\S*) is not (\S*) or (\S*)\)\)\?')
-    def x_on_list_z_big_cond(data, groups):
-        if (check_value_gte(data['activity'], groups[3], groups[4], True) and not (check_value_is(data['activity'], groups[5], groups[7], False) or check_value_is(data['activity'], groups[6], groups[7], False) or check_value_is(data['activity'], groups[5], groups[8], False) or check_value_is(data['activity'], groups[6], groups[8], False))):
-            return check_lists(data['activity'], [groups[1]], data['lists'][groups[2]], groups[0] == 'every')
+    def x_on_list_z_big_cond(activity, groups, lists):
+        if (check_value_gte(activity, groups[3], groups[4], True) and not (check_value_is(activity, groups[5], groups[7], False) or check_value_is(activity, groups[6], groups[7], False) or check_value_is(activity, groups[5], groups[8], False) or check_value_is(activity, groups[6], groups[8], False))):
+            return check_lists(activity, [groups[1]], lists[groups[2]], groups[0] == 'every')
 
     @add_partial('(?:at least one )?(\S*) or (\S*) is available forward by quarters \(if (\S*) is at least (\S*)\)\?')
     def x_or_y_available_forward_qtrs_cond(activity, groups):

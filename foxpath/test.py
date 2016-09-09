@@ -18,7 +18,7 @@ from lxml import etree
 
 class TestSyntaxError(Exception): pass
 
-def generate_function(test):
+def generate_function(test, lists):
     mappings = mapping.generate_mappings()
 
     def get_mappings(ms, line):
@@ -38,7 +38,7 @@ def generate_function(test):
         except StopIteration:
             raise TestSyntaxError(line)
 
-        return lam(m.groups())
+        return lam(m.groups(), lists)
 
     f = function_for_test(test)
     return f
@@ -63,16 +63,11 @@ def result_t(result_value):
             }
     return results[result_value]
 
-def binary_test(test_name):
-    if re.compile("(.*) is on list (.*)").match(test_name):
-        return True
-    return False
-
 def test_doc_json_out(filename, test, current_test=None, lists=None):
     data = {}
-    test_fn=generate_function(test)
+    test_fn=generate_function(test, lists)
     if current_test:
-        current_test_fn = generate_function(current_test)
+        current_test_fn = generate_function(current_test, lists)
     doc = etree.parse(filename)
     activities=doc.xpath("//iati-activity")
     success =0
@@ -84,10 +79,7 @@ def test_doc_json_out(filename, test, current_test=None, lists=None):
         hierarchy = activity.xpath("@hierarchy")
         hierarchy = hierarchy[0] if hierarchy != [] else ""
         try:
-            if binary_test(test):
-                result = test_fn({"activity": activity, "lists": lists})
-            else:
-                result = test_fn(activity)
+            result = test_fn(activity)
         except Exception:
             result = 2
         if current_test:
