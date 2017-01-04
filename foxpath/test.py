@@ -51,7 +51,7 @@ def result_t(result_value):
             }
     return results[result_value]
 
-def test_doc_json_out(filename, test, current_test=None, lists=None):
+def test_doc(filename, test, current_test=None, lists=None):
     data = {}
     test_fn=generate_function(test, lists)
     if current_test:
@@ -111,3 +111,7 @@ def test_doc_json_out(filename, test, current_test=None, lists=None):
     except ZeroDivisionError:
         data['summary']['percentage'] = 0.00
     return data
+
+# deprecated
+def test_doc_json_out(filename, test, current_test=None, lists=None):
+    return test_doc(filename, test, current_test=None, lists=None)
