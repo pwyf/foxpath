@@ -43,18 +43,6 @@ def generate_function(test, lists):
     f = function_for_test(test)
     return f
 
-def test_doc(filename, test, current_test=None, lists=None):
-    j = test_doc_json_out(filename, test, current_test, lists)
-    print(test)
-    print("Success: {}".format(j["summary"]["success"]))
-    print("Fail: {}".format(j["summary"]["fail"]))
-    print("Error: {}".format(j["summary"]["error"]))
-    print("Not relevant: {}".format(j["summary"]["not_relevant"]))
-    print("Percentage: {}".format(j["summary"]["percentage"]))
-
-def test_doc_lists(filename, test, lists):
-    test_doc(filename, test, None, lists)
-
 def result_t(result_value):
     results = {0: "FAIL",
                1: "PASS",
