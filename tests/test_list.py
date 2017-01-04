@@ -1,7 +1,6 @@
 import os.path
 from unittest import TestCase
 
-import foxpath
 from foxpath import test
 
 
