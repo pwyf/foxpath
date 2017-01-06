@@ -24,10 +24,8 @@ class TestBenchmark(TestCase):
 
     def test_new(self):
         tests = self.load_expressions_from_csvfile(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests.csv'))
-        f = Foxpath(tests, self.LISTS)
-        doc = etree.parse(self.FILEPATH)
-        activities = doc.xpath("//iati-activity")
-        f.test_activities(activities)
+        foxpath = Foxpath(tests, self.LISTS)
+        foxpath.test_doc(self.FILEPATH)
 
     def test_old(self):
         tests = self.load_expressions_from_csvfile(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'old_tests.csv'))

@@ -1,5 +1,7 @@
 import re
 
+from lxml import etree
+
 
 class Foxpath(object):
     def __init__(self, tests, codelists):
@@ -132,3 +134,8 @@ class Foxpath(object):
 
     def test_activities(self, activities):
         return [self.test_activity(activity) for activity in activities]
+
+    def test_doc(self, filepath):
+        doc = etree.parse(filepath)
+        activities = doc.xpath("//iati-activity")
+        return self.test_activities(activities)
