@@ -1,0 +1,52 @@
+"indicator_name","indicator_description","test_name","test_description","test_level"
+"aid-type","Aid Type",if `activity-status/@code` is at least 2 then `default-aid-type` exists or `transaction/aid-type` exists,"Default aid type",1
+"aid-type","Aid Type",if `activity-status/@code` is at least 2 then every `default-aid-type/@code` is on list AidType and every `transaction/aid-type/@code` is on list AidType,"Aid type uses standard codelist",1
+"allocation","Allocation policy",`document-link/category[@code='B04']` exists,"Allocation policy",3
+"annual-report","Annual report",`document-link/category[@code='B01']` exists,"Annual report",3
+"audit","Audit",`document-link/category[@code='B06']` exists,"Audit",3
+"budget","Budget Docs",if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A01 then `document-link/category[@code='A05']` exists,"Document - Budget document",1
+"budget-identifier","Budget Identifier",if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `default-aid-type/@code` is not A02 and `transaction/aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A02 then every `country-budget-items[@vocabulary="1"]/budget-item/@code` is on list BudgetIdentifier, administrative/functional classification",1
+"budget-identifier","Budget Identifier",if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `default-aid-type/@code` is not A02 and `transaction/aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A02 then `capital-spend` exists, economic classification",1
+"collaboration-type","Collaboration Type",if `activity-status/@code` is at least 2 then `collaboration-type` exists,"Collaboration type",1
+"collaboration-type","Collaboration Type",if `activity-status/@code` is at least 2 then every `collaboration-type/@code` is on list CollaborationType,"Collaboration type uses standard codelist",1
+"contact-details","Contact details",`contact-info` exists,"Contact information for the activity",1
+"contracts","Contracts",if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A01 then `document-link/category[@code='A06']` exists or `document-link/category[@code='A11']` exists,"Document - Contract",1
+"cost-overall","Budget",if `activity-status/@code` is at least 2 then `budget` is available forward or `planned-disbursement` is available forward,"Budget",1
+"cost-overall","Budget",if `activity-status/@code` is at least 2 then `budget` is available forward by quarters or `planned-disbursement` is available forward by quarters, by quarters",1
+"current-status","Current Status",`activity-status` exists,"Activity status",1
+"current-status","Current Status",every `activity-status/@code` is on list ActivityStatus, only once",1
+"dates-actual","Actual dates",if `activity-status/@code` is at least 3 then `activity-date[@type='end-actual']|activity-date[@type='4']` exists,"Activity date actual end date",1
+"dates-actual","Actual dates",if `activity-status/@code` is at least 2 then `activity-date[@type='start-actual']|activity-date[@type='2']` exists,"Activity date actual start date",1
+"dates-planned","Planned dates",`activity-date[@type='end-planned']|activity-date[@type='3']` exists,"Activity date planned end date",1
+"dates-planned","Planned dates",`activity-date[@type='start-planned']|activity-date[@type='1']` exists,"Activity date planned start date",1
+"description","Description",`description/text()|description/narrative/text()` exists,"Description",1
+"description","Description",`description/text()|description/narrative/text()` has more than 40 characters, more than 40 chars",1
+"evaluations","Evaluations",if `activity-status/@code` is at least 3 then `document-link/category[@code='A07']` exists,"Document - Review of project performance and evaluation document",1
+"expenditure-actual","Disbursements and expenditure",if `activity-status/@code` is at least 2 then `transaction/transaction-type[@code='D']|transaction/transaction-type[@code='3']` exists or `transaction/transaction-type[@code='E']|transaction/transaction-type[@code='4']` exists,"Disbursements",1
+"expenditure-planned","Commitments",if `activity-status/@code` is at least 2 then `transaction/transaction-type[@code='C']` exists or `transaction/transaction-type[@code='2']` exists,"Commitments",1
+"finance-type","Finance Type",if `activity-status/@code` is at least 2 then `default-finance-type` exists or `transaction/finance-type` exists,"Default finance type",1
+"finance-type","Finance Type",if `activity-status/@code` is at least 2 then every `default-finance-type/@code` is on list FinanceType and every `transaction/finance-type/@code` is on list FinanceType,"Finance type uses standard codelist",1
+"flow-type","Flow Type",if `activity-status/@code` is at least 2 then `default-flow-type` exists or `transaction/flow-type` exists,"Flow type",1
+"flow-type","Flow Type",if `activity-status/@code` is at least 2 then every `default-flow-type/@code` is on list FlowType and every `transaction/flow-type/@code` is on list FlowType,"Flow type uses standard codelist",1
+"impact-appraisals","Impact Appraisals",if `activity-status/@code` is at least 2 then `document-link/category[@code='A01']` exists,"Document - Pre- and post-project impact appraisal",1
+"implementer","Implementer",if `activity-status/@code` is at least 2 then `participating-org[@role='Implementing']|participating-org[@role='4']` exists,"Implementing organisation",1
+"location","Sub-national location",if `activity-status/@code` is at least 2 and `recipient-region/@code` is not 998 then `location` exists,"Location (sub-national)",1
+"location","Sub-national location",if `activity-status/@code` is at least 2 and `recipient-region/@code` is not 998 then `location/coordinates` exists or `location/point` exists,"Location (sub-national) coordinates or point",1
+"mou","MoU",if `activity-status/@code` is at least 2 then `document-link/category[@code='A09']` exists,"Document - Memorandum of understanding document",1
+"objectives","Objectives",if `activity-status/@code` is at least 2 then `document-link/category[@code='A02']` exists or `description[@type='2']` exists,"Document - Objectives / Purpose of activity document",1
+"procurement-policy","Procurement policy",`document-link/category[@code='B05']` exists,"Procurement policy",3
+"sector","Sector",`sector` exists or `transaction/sector` exists,"Sector",1
+"sector","Sector",every `sector[@vocabulary="DAC"]/@code|sector[not(@vocabulary)]/@code|sector[@vocabulary="1"]/@code|transaction/sector[@vocabulary="1"]/@code|transaction/sector[not(@vocabulary)]/@code` is on list Sector,"Sector uses standard codelist",1
+"strategy","Strategy",`document-link/category[@code='B02']` exists,"Strategy",3
+"tenders","Tenders",if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A01 then `document-link/category[@code='A10']` exists,"Document - Tender",1
+"tied-aid-status","Tied Aid Status",if `activity-status/@code` is at least 2 then `default-tied-status` exists or `transaction/tied-status` exists,"Tied aid status",1
+"tied-aid-status","Tied Aid Status",if `activity-status/@code` is at least 2 then every `default-tied-status/@code` is on list TiedStatus and every `transaction/tied-status/@code` is on list TiedStatus,"Tied aid status uses standard codelist",1
+"title","Title",`title/text()|title/narrative/text()` exists,"Title",1
+"title","Title",`title/text()|title/narrative/text()` has more than 10 characters, more than 10 chars",1
+"unique-id","Unique ID",`iati-identifier` exists,"Unique IATI Identifier",1
+"unique-id","Unique ID",`iati-identifier/text()` starts with `reporting-org/@ref` or `iati-identifier/text()` starts with `other-identifier[@type='B1']/@ref`,"IATI Identifier starts with reporting org ref",1
+"conditions","Conditions",if `activity-status/@code` is at least 2 then `conditions` exists,"Conditions data",1
+"conditions","Conditions",if `activity-status/@code` is at least 2 then `document-link/category[@code='A04']` exists,"Conditions document",1
+"results","Results",if `activity-status/@code` is at least 2 then `result` exists,"Results data",1
+"results","Results",if `activity-status/@code` is at least 2 then `document-link/category[@code='A08']` exists,"Results document",1
+,,"`activity-date[@type='end-planned']/@iso-date|activity-date[@type='end-planned']/text()|activity-date[@type='3']/@iso-date|activity-date[@type='3']/text()` is less than 13 months ago or `activity-date[@type='end-actual']/@iso-date|activity-date[@type='end-actual']/text()|activity-date[@type='4']/@iso-date|activity-date[@type='4']/text()` is less than 13 months ago or where `transaction[transaction-type/@code='D']|transaction[transaction-type/@code='E']|transaction[transaction-type/@code='3']|transaction[transaction-type/@code='4']` exists, `transaction-date/@iso-date` is less than 13 months ago","Current data",1
