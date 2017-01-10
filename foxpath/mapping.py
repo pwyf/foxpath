@@ -280,7 +280,7 @@ def generate_mappings():
 
     def x_months_ago_check(activity, xpath, months, many=False):
         months = int(months)
-        current_date = datetime.datetime.utcnow()
+        current_date = datetime.datetime.now()
         if many:
             for check in activity.xpath(many):
                 try:

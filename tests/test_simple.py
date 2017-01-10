@@ -20,7 +20,7 @@ class TestSimple(TestCase):
 
     @patch('foxpath.mapping.datetime.datetime')
     def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g_months_ago(self, mock_datetime):
-        mock_datetime.utcnow.return_value = datetime(2015, 12, 1)
+        mock_datetime.now.return_value = datetime(2015, 12, 1)
         mock_datetime.strptime.side_effect = lambda *args, **kw: datetime.strptime(*args, **kw)
 
         t = 'activity-date[@type="end-planned"]/@iso-date or activity-date[@type="end-planned"]/text() or activity-date[@type="end-actual"]/@iso-date or activity-date[@type="end-actual"]/text() or transaction-date/@iso-date (for any transaction[transaction-type/@code="D"]|transaction[transaction-type/@code="E"]) is less than 13 months ago?'
