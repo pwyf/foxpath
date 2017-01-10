@@ -8,15 +8,18 @@ from foxpath import Foxpath, test
 import codelists
 
 
+class Test(object):
+    def __init__(self, **kwargs):
+        self.id = kwargs['id']
+        self.name = kwargs['name']
+
 class TestBenchmark(TestCase):
     def load_expressions_from_csvfile(self, filename):
         with open(filename) as f:
             reader = csv.DictReader(f)
             return [
-                {
-                    'name': t["test_description"],
-                    'expression': t["test_name"],
-                } for t in reader
+                Test(id=t["test_description"], name=t["test_name"])
+                for t in reader
             ]
 
     FILEPATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sida-tz.xml')
