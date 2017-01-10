@@ -129,7 +129,3 @@ def test_doc(filename, tests, current_test=None, lists=None):
             data['summary'][test_id]['percentage'] = 0.00
     data['summary'] = dict(data['summary'])
     return data
-
-# deprecated
-def test_doc_json_out(filename, test, current_test=None, lists=None):
-    return test_doc(filename, test, current_test=None, lists=None)
