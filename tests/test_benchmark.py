@@ -29,5 +29,4 @@ class TestBenchmark(TestCase):
 
     def test_old(self):
         tests = self.load_expressions_from_csvfile(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'old_tests.csv'))
-        for t in tests:
-            test.test_doc(self.FILEPATH, t['expression'], lists=self.LISTS)
+        test.test_doc(self.FILEPATH, tests, lists=self.LISTS)
