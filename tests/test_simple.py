@@ -1,5 +1,8 @@
 import os.path
 from unittest import TestCase
+from datetime import datetime
+
+from mock import patch
 
 from foxpath import test
 
@@ -15,11 +18,15 @@ class TestSimple(TestCase):
         self.assertEqual(result['summary']['not_relevant'], 0)
         self.assertEqual(result['summary']['error'], 0)
 
-    def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g(self):
+    @patch('foxpath.mapping.datetime.datetime')
+    def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g_months_ago(self, mock_datetime):
+        mock_datetime.utcnow.return_value = datetime(2015, 12, 1)
+        mock_datetime.strptime.side_effect = lambda *args, **kw: datetime.strptime(*args, **kw)
+
         t = 'activity-date[@type="end-planned"]/@iso-date or activity-date[@type="end-planned"]/text() or activity-date[@type="end-actual"]/@iso-date or activity-date[@type="end-actual"]/text() or transaction-date/@iso-date (for any transaction[transaction-type/@code="D"]|transaction[transaction-type/@code="E"]) is less than 13 months ago?'
         result = test.test_doc(self.FILEPATH, t)
-        self.assertEqual(result['summary']['success'], 57)
-        self.assertEqual(result['summary']['fail'], 216)
+        self.assertEqual(result['summary']['success'], 132)
+        self.assertEqual(result['summary']['fail'], 141)
         self.assertEqual(result['summary']['not_relevant'], 0)
         self.assertEqual(result['summary']['error'], 0)
 
@@ -31,20 +38,28 @@ class TestSimple(TestCase):
         self.assertEqual(result['summary']['not_relevant'], 82)
         self.assertEqual(result['summary']['error'], 0)
 
-    def test_a_or_b_is_available_forward_if_c_is_at_least_d(self):
+    @patch('foxpath.mapping.datetime.datetime')
+    def test_a_or_b_is_available_forward_if_c_is_at_least_d(self, mock_datetime):
+        mock_datetime.now.return_value = datetime(2015, 12, 1)
+        mock_datetime.strptime.side_effect = lambda *args, **kw: datetime.strptime(*args, **kw)
+
         t = 'budget or planned-disbursement is available forward (if activity-status/@code is at least 2)?'
         result = test.test_doc(self.FILEPATH, t)
-        self.assertEqual(result['summary']['success'], 15)
-        self.assertEqual(result['summary']['fail'], 7)
-        self.assertEqual(result['summary']['not_relevant'], 251)
+        self.assertEqual(result['summary']['success'], 20)
+        self.assertEqual(result['summary']['fail'], 14)
+        self.assertEqual(result['summary']['not_relevant'], 239)
         self.assertEqual(result['summary']['error'], 0)
 
-    def test_a_or_b_is_available_forward_by_quarters_if_c_is_at_least_d(self):
+    @patch('foxpath.mapping.datetime.datetime')
+    def test_a_or_b_is_available_forward_by_quarters_if_c_is_at_least_d(self, mock_datetime):
+        mock_datetime.now.return_value = datetime(2015, 12, 1)
+        mock_datetime.strptime.side_effect = lambda *args, **kw: datetime.strptime(*args, **kw)
+
         t = 'budget or planned-disbursement is available forward by quarters (if activity-status/@code is at least 2)?'
         result = test.test_doc(self.FILEPATH, t)
         self.assertEqual(result['summary']['success'], 0)
-        self.assertEqual(result['summary']['fail'], 22)
-        self.assertEqual(result['summary']['not_relevant'], 251)
+        self.assertEqual(result['summary']['fail'], 34)
+        self.assertEqual(result['summary']['not_relevant'], 239)
         self.assertEqual(result['summary']['error'], 0)
 
     def test_a_is_an_integer(self):
