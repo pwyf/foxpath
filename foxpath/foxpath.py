@@ -6,7 +6,7 @@ from lxml import etree
 class Foxpath(object):
     def __init__(self, tests, codelists=None):
         self.tests = {
-            test.id: self.parse(test.name, codelists)
+            test['id']: self.parse(test['name'], codelists)
             for test in tests
         }
 

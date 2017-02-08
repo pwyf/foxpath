@@ -31,8 +31,8 @@ def generate_test_functions(tests, lists):
     # yuck
     def test_getattr(test, attr):
         try:
-            return getattr(test, attr)
-        except AttributeError:
+            return test[attr]
+        except TypeError:
             return test
 
     def function_for_test(test):

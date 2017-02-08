@@ -8,17 +8,15 @@ from foxpath import Foxpath, test
 from tests import codelists
 
 
-class Test(object):
-    def __init__(self, **kwargs):
-        self.id = kwargs['id']
-        self.name = kwargs['name']
-
 class TestBenchmark(TestCase):
     def load_expressions_from_csvfile(self, filename):
         with open(filename) as f:
             reader = csv.DictReader(f)
             return [
-                Test(id=t["test_description"], name=t["test_name"])
+                {
+                    'id': t["test_description"],
+                    'name': t["test_name"],
+                }
                 for t in reader
             ]
 
