@@ -50,7 +50,7 @@ class Foxpath(object):
         def is_not(activity, groups, **kwargs):
             exp = groups[0](activity)
             val = groups[1](activity)
-            return not any([x == val for x in exp])
+            return not any([x == str(val) for x in exp])
 
         # defaults to true
         def is_at_least(activity, groups, **kwargs):
@@ -87,7 +87,7 @@ class Foxpath(object):
             y = groups[1](activity)
             if x == [] or y == []:
                 return False
-            return x[0].startswith(y[0])
+            return x[0].startswith(str(y[0]))
 
         def is_less_than_x_months_ago(activity, groups, **kwargs):
             pass
