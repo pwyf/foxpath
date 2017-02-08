@@ -29,8 +29,8 @@ class Foxpath(object):
                 raise Exception('That codelist doesn\'t exist!')
             return codelist
 
-        def where(activity, groups, **kwargs):
-            return [groups[1](exp) for exp in groups[0](activity)]
+        def for_any(activity, groups, **kwargs):
+            return any([groups[1](exp) for exp in groups[0](activity)])
 
         def either(activity, groups, **kwargs):
             return groups[0](activity) or groups[1](activity)
@@ -104,7 +104,7 @@ class Foxpath(object):
             (re.compile(r'`[^`]+`$'), xpath, 'xpath'),
             (re.compile(r'^\d+$'), integer, 'integer'),
             (re.compile(r'[A-Z]+\d+$'), code, 'code'),
-            (re.compile(r'^where (`\S*`) exists, (`\S*`)$'), where, 'where'),
+            (re.compile(r'^for any (`\S*`), (.*)$'), for_any, 'for_any'),
             (re.compile(r'^(.*) or (.*)$'), either, 'or'),
             (re.compile(r'^(.*) and (.*)$'), both, 'and'),
             (re.compile(r'^(`\S*`) is not (\S*)$'), is_not, 'is_not'),
