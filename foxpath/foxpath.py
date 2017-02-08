@@ -63,7 +63,7 @@ class Foxpath(object):
             return int(groups[0](activity)[0]) >= groups[1](activity)
 
         def exists(activity, groups, **kwargs):
-            return filter(lambda x: x != '', groups[0](activity)) != []
+            return [x for x in groups[0](activity) if x != ''] != []
 
         # defaults to true
         def is_on_list(activity, groups, **kwargs):
@@ -71,7 +71,7 @@ class Foxpath(object):
                 for v in vals:
                     v = str(v)
                     versions = [v, v.lower(), v.upper()]
-                    yield any((bool(v in codelist) for v in versions))
+                    yield any([v in codelist for v in versions])
             vals = groups[0](activity)
             return all(check_list(vals, groups[1](activity)))
 
@@ -79,9 +79,7 @@ class Foxpath(object):
         def is_more_than_x_characters(activity, groups, **kwargs):
             exp = groups[0](activity)
             val = groups[1](activity)
-            return bool(
-                reduce(lambda x, y: x or y, map(lambda x: len(x) > val, exp), False)
-            )
+            return any([len(x) > val for x in exp])
 
         # defaults to false
         def starts_with(activity, groups, **kwargs):
