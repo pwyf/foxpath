@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from lxml import etree
@@ -89,8 +90,20 @@ class Foxpath(object):
                 return False
             return x[0].startswith(str(y[0]))
 
+        # defaults to false
         def is_less_than_x_months_ago(activity, groups, **kwargs):
-            pass
+            current_date = datetime.datetime.now()
+            def less_than_x_months_ago(date_str, months_ago):
+                date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+                year_diff = current_date.year - date.year
+                month_diff = 12 * year_diff + current_date.month - date.month
+                if month_diff == months_ago:
+                    return date.day > current_date.day
+                return month_diff < months_ago
+
+            dates = groups[0](activity)
+            months_ago = groups[1](activity)
+            return any([less_than_x_months_ago(date_str, months_ago) for date_str in dates])
 
         def is_available_forward(activity, groups, **kwargs):
             pass
