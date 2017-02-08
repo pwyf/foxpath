@@ -56,12 +56,13 @@ class Foxpath(object):
         # defaults to true
         def is_at_least(activity, groups, **kwargs):
             vals = groups[0](activity)
+            const = groups[1](activity)
             if len(vals) < 1:
                 print('note: is_at_least was expecting to find one and only one element. Found 0')
                 return True
             if len(vals) > 1:
                 print('note: is_at_least was expecting to find one and only one element. Found {}'.format(len(vals)))
-            return int(groups[0](activity)[0]) >= groups[1](activity)
+            return any([int(val) >= const for val in vals])
 
         def exists(activity, groups, **kwargs):
             return any([val != '' for val in groups[0](activity)])
