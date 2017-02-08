@@ -5,7 +5,7 @@ import csv
 from lxml import etree
 
 from foxpath import Foxpath, test
-import codelists
+from tests import codelists
 
 
 class Test(object):
