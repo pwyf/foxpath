@@ -49,10 +49,8 @@ class Foxpath(object):
         # defaults to true
         def is_not(activity, groups, **kwargs):
             exp = groups[0](activity)
-            val = groups[0](activity)
-            if filter(lambda x: x != '', exp) == []:
-                return True
-            return exp[0] != val
+            val = groups[1](activity)
+            return not any([x == val for x in exp])
 
         # defaults to true
         def is_at_least(activity, groups, **kwargs):
