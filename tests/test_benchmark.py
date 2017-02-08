@@ -15,7 +15,7 @@ class TestBenchmark(TestCase):
             return [
                 {
                     'id': t["test_description"],
-                    'name': t["test_name"],
+                    'expression': t["test_name"],
                 }
                 for t in reader
             ]

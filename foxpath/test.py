@@ -36,7 +36,7 @@ def generate_test_functions(tests, lists):
             return test
 
     def function_for_test(test):
-        line = test_getattr(test, 'name')
+        line = test_getattr(test, 'expression')
 
         match_data = get_mappings(mappings, line)
         matching_mappings = itertools.ifilter(first_true, match_data)
