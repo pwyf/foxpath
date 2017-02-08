@@ -63,7 +63,7 @@ class Foxpath(object):
             return int(groups[0](activity)[0]) >= groups[1](activity)
 
         def exists(activity, groups, **kwargs):
-            return [x for x in groups[0](activity) if x != ''] != []
+            return any([val != '' for val in groups[0](activity)])
 
         # defaults to true
         def is_on_list(activity, groups, **kwargs):
