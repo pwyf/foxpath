@@ -11,9 +11,6 @@ class Foxpath(object):
             for test in tests
         }
 
-    def __getitem__(self, index):
-        return self.tests[index]
-
     def parse(self, test, codelists):
         def xpath(activity, groups, **kwargs):
             # [1:-1] gets rid of the backticks
