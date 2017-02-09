@@ -13,7 +13,7 @@ class TestSimple(TestCase):
     def test_a_starts_with_b(self):
         t = {
             'id': '_',
-            'expression': '`iati-identifier/text()` starts with `reporting-org/@ref`',
+            'expression': '`iati-identifier/text()` should start with `reporting-org/@ref`',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -40,7 +40,7 @@ class TestSimple(TestCase):
     def test_a_or_b_exists_if_c_is_at_least_d_and_e_is_not_f(self):
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 and `conditions/@attached` is not 0 then `conditions` exists or `document-link/category[@code="A04"]` exists',
+            'expression': 'if `activity-status/@code` is at least 2 and `conditions/@attached` is not 0 then `conditions` should be present or `document-link/category[@code="A04"]` should be present',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -54,7 +54,7 @@ class TestSimple(TestCase):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 then `budget` is available forward or `planned-disbursement` is available forward',
+            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward or `planned-disbursement` should be available forward',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -68,7 +68,7 @@ class TestSimple(TestCase):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 then `budget` is available forward by quarters or `planned-disbursement` is available forward by quarters',
+            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward by quarters or `planned-disbursement` should be available forward by quarters',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -80,7 +80,7 @@ class TestSimple(TestCase):
     def test_a_exists_if_b_is_at_least_c_and_d_or_e_is_not_f_or_g(self):
         t = {
                 'id': '_',
-                'expression': 'if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `default-aid-type/@code` is not A02 and `transaction/aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A02 then `capital-spend` exists',
+                'expression': 'if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `default-aid-type/@code` is not A02 and `transaction/aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A02 then `capital-spend` should be present',
             }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)

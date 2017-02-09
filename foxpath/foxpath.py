@@ -26,8 +26,8 @@ class Foxpath(object):
             return groups[0]
 
         def a_list(activity, groups, codelists, **kwargs):
-            # [5:] gets rid of 'list '
-            codelist = codelists.get(groups[0][5:])
+            # [:-5] gets rid of ' list'
+            codelist = codelists.get(groups[0][:-5])
             if not codelist:
                 raise Exception('That codelist doesn\'t exist!')
             return codelist
@@ -175,7 +175,7 @@ class Foxpath(object):
 
         mappings = (
             (re.compile(r'^if (.*) then (.*)$'), if_then, 'if_then'),
-            (re.compile(r'list \S*$'), a_list, 'list'),
+            (re.compile(r'\S* list$'), a_list, 'list'),
             (re.compile(r'`[^`]+`$'), xpath, 'xpath'),
             (re.compile(r'^\d+$'), integer, 'integer'),
             (re.compile(r'[A-Z]+\d+$'), code, 'code'),
@@ -184,13 +184,13 @@ class Foxpath(object):
             (re.compile(r'^(.*) and (.*)$'), both, 'and'),
             (re.compile(r'^(`[^`]+`) is not (\S*)$'), is_not, 'is_not'),
             (re.compile(r'^(`[^`]+`) is at least (\d+)$'), is_at_least, 'is_at_least'),
-            (re.compile(r'^(`[^`]+`) exists$'), exists, 'exists'),
-            (re.compile(r'^(`[^`]+`) starts with (`[^`]+`)$'), starts_with, 'starts_with'),
-            (re.compile(r'^every (`[^`]+`) is on (list \S*)$'), is_on_list, 'is_on_list'),
-            (re.compile(r'^(`[^`]+`) has more than (\d+) characters$'), is_more_than_x_characters, 'is_more_than_x_characters'),
+            (re.compile(r'^(`[^`]+`) should be present$'), exists, 'exists'),
+            (re.compile(r'^(`[^`]+`) should start with (`[^`]+`)$'), starts_with, 'starts_with'),
+            (re.compile(r'^every (`[^`]+`) should be on the (\S* list)$'), is_on_list, 'is_on_list'),
+            (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters, 'is_more_than_x_characters'),
             (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago, 'is_less_than_x_months_ago'),
-            (re.compile(r'^(`[^`]+`) is available forward$'), is_available_forward, 'is_available_forward'),
-            (re.compile(r'^(`[^`]+`) is available forward by quarters$'), is_available_forward_by_qtrs, 'is_available_forward_by_qtrs'),
+            (re.compile(r'^(`[^`]+`) should be available forward$'), is_available_forward, 'is_available_forward'),
+            (re.compile(r'^(`[^`]+`) should be available forward by quarters$'), is_available_forward_by_qtrs, 'is_available_forward_by_qtrs'),
         )
         for regex, fn, name in mappings:
             r = regex.match(test)
