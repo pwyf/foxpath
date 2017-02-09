@@ -12,8 +12,8 @@
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
-      then every `default-aid-type/@code` should be on the AidType codelist
-      and every `transaction/aid-type/@code` should be on the AidType codelist
+      then at least one `default-aid-type/@code` should be on the AidType codelist
+      or at least one `transaction/aid-type/@code` should be on the AidType codelist
 
 - indicator-description: Allocation policy
   indicator-name: allocation
@@ -61,7 +61,7 @@
       and `default-aid-type/@code` is not A02
       and `transaction/aid-type/@code` is not A01
       and `transaction/aid-type/@code` is not A02
-      then every `country-budget-items[@vocabulary="1"]/budget-item/@code` should be on the BudgetIdentifier codelist
+      then at least one `country-budget-items[@vocabulary="1"]/budget-item/@code` should be on the BudgetIdentifier codelist
 
    - description: economic classification
      level: 1
@@ -86,7 +86,7 @@
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
-      then every `collaboration-type/@code` should be on the CollaborationType codelist
+      then at least one `collaboration-type/@code` should be on the CollaborationType codelist
 
 - indicator-description: Contact details
   indicator-name: contact-details
@@ -136,7 +136,7 @@
    - description: only once
      level: 1
      expression: >
-      every `activity-status/@code` should be on the ActivityStatus codelist
+      at least one `activity-status/@code` should be on the ActivityStatus codelist
 
 - indicator-description: Actual dates
   indicator-name: dates-actual
@@ -228,8 +228,8 @@
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
-      then every `default-finance-type/@code` should be on the FinanceType codelist
-      and every `transaction/finance-type/@code` should be on the FinanceType codelist
+      then at least one `default-finance-type/@code` should be on the FinanceType codelist
+      or at least one `transaction/finance-type/@code` should be on the FinanceType codelist
 
 - indicator-description: Flow Type
   indicator-name: flow-type
@@ -245,8 +245,8 @@
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
-      then every `default-flow-type/@code` should be on the FlowType codelist
-      and every `transaction/flow-type/@code` should be on the FlowType codelist
+      then at least one `default-flow-type/@code` should be on the FlowType codelist
+      or at least one `transaction/flow-type/@code` should be on the FlowType codelist
 
 - indicator-description: Impact Appraisals
   indicator-name: impact-appraisals
@@ -325,7 +325,7 @@
    - description: Sector uses standard codelist
      level: 1
      expression: >
-      every
+      at least one
         `sector[@vocabulary="DAC"]/@code |
          sector[not(@vocabulary)]/@code |
          sector[@vocabulary="1"]/@code |
@@ -366,8 +366,8 @@
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
-      then every `default-tied-status/@code` should be on the TiedStatus codelist
-      and every `transaction/tied-status/@code` should be on the TiedStatus codelist
+      then at least one `default-tied-status/@code` should be on the TiedStatus codelist
+      or at least one `transaction/tied-status/@code` should be on the TiedStatus codelist
 
 - indicator-description: Title
   indicator-name: title
