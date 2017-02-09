@@ -108,11 +108,70 @@ class Foxpath(object):
             months_ago = groups[1](activity)
             return any([less_than_x_months_ago(date_str, months_ago) for date_str in dates])
 
+        def forward_budget(activity, els, period):
+            def mkdate(date_str):
+                dt = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+                return dt.date()
+
+            def max_date(dates, default):
+                try:
+                    return mkdate(max(dates))
+                except ValueError:
+                    return default
+
+            # Window start is from today onwards. We're only interested in budgets
+            # that start or end after today.
+            today = datetime.date.today()
+
+            # Window period is for the next 365 days. We don't want to look later
+            # than that; we're only interested in budgets that end before then.
+            #
+            # We get the latest date for end and start; 365 days fwd
+            # if there are no dates
+            one_years_time = today.replace(today.year + 1)
+            end_dates = activity.xpath('activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-actual"]/@iso-date|activity-date[@type="3"]/@iso-date|activity-date[@type="4"]/@iso-date')
+            end_date = max_date(end_dates, one_years_time)
+
+            # If the activity ends earlier than the end of the window period,
+            # don't penalise the donor for not having a budget
+            escape_end_date = today + datetime.timedelta(days=177)
+            if end_date < escape_end_date:
+                return None
+
+            def check_after(element, today):
+                dates = element.xpath('period-start/@iso-date|period-end/@iso-date')
+                return any([mkdate(date) >= today for date in dates])
+
+            def max_budget_length(element, max_budget_length):
+                # NB this will error if there's no period-end/@iso-date
+                start = mkdate(element.xpath('period-start/@iso-date')[0])
+                end = mkdate(element.xpath('period-end/@iso-date')[0])
+                return ((end-start).days <= max_budget_length)
+
+            # We set a maximum number of days for which a budget can last,
+            # depending on the number of quarters that should be covered.
+            if period == 'annual':
+                max_days = 370
+            elif period == 'quarterly':
+                max_days = 94
+
+            # A budget has to be:
+            # 1) period-end after today
+            # 2) a maximum number of days, depending on # of qtrs.
+            for element in els:
+                after_today = check_after(element, today)
+                within_length = max_budget_length(element, max_days)
+                if after_today and within_length:
+                    return True
+            return False
+
         def is_available_forward(activity, groups, **kwargs):
-            pass
+            els = groups[0](activity)
+            return forward_budget(activity, els, 'annual')
 
         def is_available_forward_by_qtrs(activity, groups, **kwargs):
-            pass
+            els = groups[0](activity)
+            return forward_budget(activity, els, 'quarterly')
 
         mappings = (
             (re.compile(r'^if (.*) then (.*)$'), if_then, 'if_then'),
