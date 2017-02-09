@@ -1,7 +1,9 @@
 import csv
 import os.path
 from unittest import TestCase
+from datetime import date
 
+from mock import patch
 import yaml
 from lxml import etree
 
@@ -47,12 +49,22 @@ class TestCompare(TestCase):
         summary_new = foxpath.summarize_results(result_new)
 
         for k, v in summary_old.items():
+            # for key in [('fail', 'fail'), ('pass', 'success'), ('not-relevant', 'not_relevant')]:
+            #     if summary_new[k][key[0]] != v[key[1]]:
+            #         print('---')
+            #         print('{} - {}'.format(k, key[0]))
+            #         print((summary_new[k][key[0]], v[key[1]]))
+            #         print('---')
             self.assertEqual(summary_new[k]['fail'], v['fail'])
             self.assertEqual(summary_new[k]['pass'], v['success'])
             self.assertEqual(summary_new[k]['not-relevant'], v['not_relevant'])
 
-    def test_compare_sida(self):
+    @patch('foxpath.mapping.datetime.date')
+    def test_compare_sida(self, mock_date):
+        mock_date.today.return_value = date(2015, 12, 1)
         self.run_comparison('sida-tz.xml')
 
-    def test_compare_dfid(self):
+    @patch('foxpath.mapping.datetime.date')
+    def test_compare_dfid(self, mock_date):
+        mock_date.today.return_value = date(2015, 12, 1)
         self.run_comparison('dfid-tz.xml')
