@@ -16,6 +16,7 @@ class Foxpath(object):
 
     def parse(self, test, codelists):
         def xpath(activity, groups, **kwargs):
+            # [1:-1] gets rid of the backticks
             return activity.xpath(groups[0][1:-1])
 
         def integer(activity, groups, **kwargs):
@@ -25,6 +26,7 @@ class Foxpath(object):
             return groups[0]
 
         def a_list(activity, groups, codelists, **kwargs):
+            # [5:] gets rid of 'list '
             codelist = codelists.get(groups[0][5:])
             if not codelist:
                 raise Exception('That codelist doesn\'t exist!')
