@@ -95,7 +95,7 @@ class Foxpath(object):
 
         # defaults to false
         def is_less_than_x_months_ago(activity, groups, **kwargs):
-            current_date = datetime.datetime.now()
+            current_date = datetime.date.today()
             def less_than_x_months_ago(date_str, months_ago):
                 date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
                 year_diff = current_date.year - date.year
