@@ -1,6 +1,5 @@
 import csv
 import os.path
-import re
 from unittest import TestCase
 
 import yaml
@@ -23,13 +22,12 @@ class TestBenchmark(TestCase):
             ]
 
     def load_expressions_from_yaml(self, filename):
-        whitespace = re.compile(r'\s+')
         with open(filename) as f:
             reader = yaml.load(f)
             return [
                 {
                     'id': t['description'],
-                    'expression': whitespace.sub(' ', t['expression']).strip(),
+                    'expression': t['expression'],
                 }
                 for indicator in reader for t in indicator['tests']
             ]

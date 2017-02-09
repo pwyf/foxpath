@@ -6,8 +6,14 @@ from lxml import etree
 
 class Foxpath(object):
     def __init__(self, tests, codelists=None):
+        whitespace = re.compile(r'\s+')
+
+        def strip_and_parse(expression):
+            trimmed_expr = whitespace.sub(' ', expression).strip()
+            return self.parse(trimmed_expr, codelists)
+
         self.tests = {
-            test['id']: self.parse(test['expression'], codelists)
+            test['id']: strip_and_parse(test['expression'])
             for test in tests
         }
 
