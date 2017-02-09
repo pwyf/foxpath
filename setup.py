@@ -1,19 +1,21 @@
-#!/usr/bin/env python
-#coding: utf-8
+from os.path import join, dirname
+from setuptools import setup, find_packages
 
-from setuptools import setup
+
+with open(join(dirname(__file__), 'README.rst')) as f:
+    readme_text = f.read()
 
 setup(
-	name = "foxpath",
-	author = "Martin Keegan",
-	author_email = "martin.keegan@okfn.org",
-	version = "0.99.24",
-	license = "GNU Affero General Public License v3.0",
-	url = "",
-	download_url = "",
-	description = "Python library for running FoXPath tests against XML",
-	py_modules = "",
-	packages = ["foxpath"],
-	install_requires = "",
-	scripts = ""
+    name = "foxpath",
+    version = "1.0.0",
+    packages = find_packages(),
+    author = "Andy Lulham",
+    author_email = "andy.lulham@publishwhatyoufund.org",
+    description = "Python library for running FoXPath tests against XML",
+    long_description = readme_text,
+    license = "MIT",
+    install_requires = [
+        'lxml == 3.7.1',
+        'PyYAML == 3.12',
+    ],
 )
