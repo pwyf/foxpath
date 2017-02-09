@@ -234,3 +234,17 @@ class Foxpath(object):
         doc = etree.parse(filepath)
         activities = doc.xpath('//iati-activity')
         return self.test_activities(activities)
+
+    def summarize_results(self, activities_results):
+        summary = {}
+        scores = {
+            'fail': 0,
+            'pass': 0,
+            'not-relevant': 0,
+        }
+        for activity_results in activities_results:
+            for test_id, result in activity_results.items():
+                if test_id not in summary:
+                    summary[test_id] = scores.copy()
+                summary[test_id][result] += 1
+        return summary
