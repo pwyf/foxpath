@@ -179,24 +179,24 @@ class Foxpath(object):
             return test
 
         mappings = (
-            (re.compile(r'^if (.*) then (.*)$'), if_then, 'if_then'),
-            (re.compile(r'\S* codelist$'), codelist, 'codelist'),
-            (re.compile(r'`[^`]+`$'), xpath, 'xpath'),
-            (re.compile(r'^\d+$'), integer, 'integer'),
-            (re.compile(r'[A-Z]+\d+$'), code, 'code'),
-            (re.compile(r'^for any (`[^`]+`), (.*)$'), for_any, 'for_any'),
-            (re.compile(r'^(.*) or (.*)$'), either, 'or'),
-            (re.compile(r'^(.*) and (.*)$'), both, 'and'),
-            (re.compile(r'^(`[^`]+`) is not (\S*)$'), is_not, 'is_not'),
-            (re.compile(r'^(`[^`]+`) is at least (\d+)$'), is_at_least, 'is_at_least'),
-            (re.compile(r'^(`[^`]+`) should be present$'), exists, 'exists'),
-            (re.compile(r'^(`[^`]+`) should start with (`[^`]+`)$'), starts_with, 'starts_with'),
-            (re.compile(r'^(at least one|every) (`[^`]+`) should be on the (\S* codelist)$'), is_on_list, 'is_on_list'),
-            (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters, 'is_more_than_x_characters'),
-            (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago, 'is_less_than_x_months_ago'),
-            (re.compile(r'^(`[^`]+`) should be available forward (annually|quarterly)$'), is_available_forward, 'is_available_forward'),
+            (re.compile(r'^if (.*) then (.*)$'), if_then),
+            (re.compile(r'\S* codelist$'), codelist),
+            (re.compile(r'`[^`]+`$'), xpath),
+            (re.compile(r'^\d+$'), integer),
+            (re.compile(r'[A-Z]+\d+$'), code),
+            (re.compile(r'^for any (`[^`]+`), (.*)$'), for_any),
+            (re.compile(r'^(.*) or (.*)$'), either),
+            (re.compile(r'^(.*) and (.*)$'), both),
+            (re.compile(r'^(`[^`]+`) is not (\S*)$'), is_not),
+            (re.compile(r'^(`[^`]+`) is at least (\d+)$'), is_at_least),
+            (re.compile(r'^(`[^`]+`) should be present$'), exists),
+            (re.compile(r'^(`[^`]+`) should start with (`[^`]+`)$'), starts_with),
+            (re.compile(r'^(at least one|every) (`[^`]+`) should be on the (\S* codelist)$'), is_on_list),
+            (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters),
+            (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago),
+            (re.compile(r'^(`[^`]+`) should be available forward (annually|quarterly)$'), is_available_forward),
         )
-        for regex, fn, name in mappings:
+        for regex, fn in mappings:
             r = regex.match(test)
             if r:
                 if r.groups():
