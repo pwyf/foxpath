@@ -28,10 +28,10 @@ class TestBenchmark(TestCase):
             reader = yaml.load(f)
             return [
                 {
-                    'id': t['test-description'],
+                    'id': t['description'],
                     'expression': whitespace.sub(' ', t['expression']).strip(),
                 }
-                for t in reader
+                for indicator in reader for t in indicator['tests']
             ]
 
     FILEPATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sida-tz.xml')
