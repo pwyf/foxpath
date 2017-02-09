@@ -108,7 +108,11 @@ class Foxpath(object):
             months_ago = groups[1](activity)
             return any([less_than_x_months_ago(date_str, months_ago) for date_str in dates])
 
-        def forward_budget(activity, els, period):
+        def is_available_forward(activity, groups, **kwargs):
+            els = groups[0](activity)
+            period = groups[1]
+            today = datetime.date.today()
+
             def mkdate(date_str):
                 dt = datetime.datetime.strptime(date_str, '%Y-%m-%d')
                 return dt.date()
@@ -121,7 +125,6 @@ class Foxpath(object):
 
             # Window start is from today onwards. We're only interested in budgets
             # that start or end after today.
-            today = datetime.date.today()
 
             # Window period is for the next 365 days. We don't want to look later
             # than that; we're only interested in budgets that end before then.
@@ -150,10 +153,11 @@ class Foxpath(object):
 
             # We set a maximum number of days for which a budget can last,
             # depending on the number of quarters that should be covered.
-            if period == 'annual':
-                max_days = 370
-            elif period == 'quarterly':
+            if period == 'quarterly':
                 max_days = 94
+            else:
+                # annually
+                max_days = 370
 
             # A budget has to be:
             # 1) period-end after today
@@ -165,17 +169,11 @@ class Foxpath(object):
                     return True
             return False
 
-        def is_available_forward(activity, groups, **kwargs):
-            els = groups[0](activity)
-            return forward_budget(activity, els, 'annual')
-
-        def is_available_forward_by_qtrs(activity, groups, **kwargs):
-            els = groups[0](activity)
-            return forward_budget(activity, els, 'quarterly')
-
         ignored_constants = [
             'at least one',
             'every',
+            'annually',
+            'quarterly',
         ]
         if test in ignored_constants:
             return test
@@ -196,8 +194,7 @@ class Foxpath(object):
             (re.compile(r'^(at least one|every) (`[^`]+`) should be on the (\S* codelist)$'), is_on_list, 'is_on_list'),
             (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters, 'is_more_than_x_characters'),
             (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago, 'is_less_than_x_months_ago'),
-            (re.compile(r'^(`[^`]+`) should be available forward$'), is_available_forward, 'is_available_forward'),
-            (re.compile(r'^(`[^`]+`) should be available forward by quarters$'), is_available_forward_by_qtrs, 'is_available_forward_by_qtrs'),
+            (re.compile(r'^(`[^`]+`) should be available forward (annually|quarterly)$'), is_available_forward, 'is_available_forward'),
         )
         for regex, fn, name in mappings:
             r = regex.match(test)

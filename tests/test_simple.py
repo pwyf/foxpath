@@ -54,7 +54,7 @@ class TestSimple(TestCase):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward or `planned-disbursement` should be available forward',
+            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward annually or `planned-disbursement` should be available forward annually',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -68,7 +68,7 @@ class TestSimple(TestCase):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward by quarters or `planned-disbursement` should be available forward by quarters',
+            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward quarterly or `planned-disbursement` should be available forward quarterly',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
