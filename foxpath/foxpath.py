@@ -22,9 +22,9 @@ class Foxpath(object):
         def code(activity, groups, **kwargs):
             return groups[0]
 
-        def a_list(activity, groups, codelists, **kwargs):
-            # [:-5] gets rid of ' list'
-            codelist = codelists.get(groups[0][:-5])
+        def codelist(activity, groups, codelists, **kwargs):
+            # [:-9] gets rid of ' codelist'
+            codelist = codelists.get(groups[0][:-9])
             if not codelist:
                 raise Exception('That codelist doesn\'t exist!')
             return codelist
@@ -172,7 +172,7 @@ class Foxpath(object):
 
         mappings = (
             (re.compile(r'^if (.*) then (.*)$'), if_then, 'if_then'),
-            (re.compile(r'\S* list$'), a_list, 'list'),
+            (re.compile(r'\S* codelist$'), codelist, 'codelist'),
             (re.compile(r'`[^`]+`$'), xpath, 'xpath'),
             (re.compile(r'^\d+$'), integer, 'integer'),
             (re.compile(r'[A-Z]+\d+$'), code, 'code'),
@@ -183,7 +183,7 @@ class Foxpath(object):
             (re.compile(r'^(`[^`]+`) is at least (\d+)$'), is_at_least, 'is_at_least'),
             (re.compile(r'^(`[^`]+`) should be present$'), exists, 'exists'),
             (re.compile(r'^(`[^`]+`) should start with (`[^`]+`)$'), starts_with, 'starts_with'),
-            (re.compile(r'^every (`[^`]+`) should be on the (\S* list)$'), is_on_list, 'is_on_list'),
+            (re.compile(r'^every (`[^`]+`) should be on the (\S* codelist)$'), is_on_list, 'is_on_list'),
             (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters, 'is_more_than_x_characters'),
             (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago, 'is_less_than_x_months_ago'),
             (re.compile(r'^(`[^`]+`) should be available forward$'), is_available_forward, 'is_available_forward'),
