@@ -167,9 +167,9 @@ def generate_mappings():
             else:
                 # There's no activity end date to compare, so have to assume
                 # it's later than 1 year from now.
-                return (datetime.datetime.now() +
+                return (datetime.date.today() +
                         datetime.timedelta(days=365)
-                        ).date().isoformat()
+                        ).isoformat()
 
         return get_latest(end_dates)
 
@@ -213,12 +213,12 @@ def generate_mappings():
 
         # Window period is for the next 365 days. We don't want to look later
         # than that; we're only interested in budgets that end before then.
-        window_end_date = datetime.datetime.now()+datetime.timedelta(days=358)
-        window_end_date = window_end_date.date().isoformat()
+        window_end_date = datetime.date.today()+datetime.timedelta(days=358)
+        window_end_date = window_end_date.isoformat()
 
         # Window start is from today onwards. We're only interested in budgets
         # that end after today.
-        window_start_date = datetime.datetime.now().date().isoformat()
+        window_start_date = datetime.date.today().isoformat()
 
 
         # We set a maximum number of days for which a budget can last,
@@ -258,8 +258,8 @@ def generate_mappings():
         # still score for having one, as above.
         # i.e. such an activity can pass this test, but it cannot fail it.
 
-        escape_end_date = datetime.datetime.now()+datetime.timedelta(days=177)
-        escape_end_date = escape_end_date.date().isoformat()
+        escape_end_date = datetime.date.today()+datetime.timedelta(days=177)
+        escape_end_date = escape_end_date.isoformat()
 
         if mkdate(end_date) < mkdate(escape_end_date):
             return None
@@ -280,18 +280,18 @@ def generate_mappings():
 
     def x_months_ago_check(activity, xpath, months, many=False):
         months = int(months)
-        current_date = datetime.datetime.now()
+        current_date = datetime.date.today()
         if many:
             for check in activity.xpath(many):
                 try:
-                    if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d"))
+                    if ((current_date-datetime.datetime.strptime(check.xpath(xpath)[0], "%Y-%m-%d").date())
                         < (datetime.timedelta(days=(30*months)))):
                         return True
                 except IndexError:
                     pass
         else:
             try:
-                if ((current_date-(datetime.datetime.strptime(activity.xpath(xpath)[0], "%Y-%m-%d")))
+                if ((current_date-(datetime.datetime.strptime(activity.xpath(xpath)[0], "%Y-%m-%d").date()))
                         < (datetime.timedelta(days=(30*months)))):
                     return True
             except IndexError:
