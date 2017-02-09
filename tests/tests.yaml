@@ -1,0 +1,454 @@
+- indicator-description: Aid Type
+  indicator-name: aid-type
+  test-description: Default aid type
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `default-aid-type` exists
+    or `transaction/aid-type` exists
+
+- indicator-description: Aid Type
+  indicator-name: aid-type
+  test-description: Aid type uses standard codelist
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then every `default-aid-type/@code` is on list AidType
+    and every `transaction/aid-type/@code` is on list AidType
+
+- indicator-description: Allocation policy
+  indicator-name: allocation
+  test-description: Allocation policy
+  test-level: 3
+  expression: >
+    `document-link/category[@code="B04"]` exists
+
+- indicator-description: Annual report
+  indicator-name: annual-report
+  test-description: Annual report
+  test-level: 3
+  expression: >
+    `document-link/category[@code="B01"]` exists
+
+- indicator-description: Audit
+  indicator-name: audit
+  test-description: Audit
+  test-level: 3
+  expression: >
+    `document-link/category[@code="B06"]` exists
+
+- indicator-description: Budget Docs
+  indicator-name: budget
+  test-description: Document - Budget document
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `default-aid-type/@code` is not A01
+    and `transaction/aid-type/@code` is not A01
+    then `document-link/category[@code="A05"]` exists
+
+- indicator-description: Budget Identifier
+  indicator-name: budget-identifier
+  test-description: administrative/functional classification
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `default-aid-type/@code` is not A01
+    and `default-aid-type/@code` is not A02
+    and `transaction/aid-type/@code` is not A01
+    and `transaction/aid-type/@code` is not A02
+    then every `country-budget-items[@vocabulary="1"]/budget-item/@code` is on list BudgetIdentifier
+
+- indicator-description: Budget Identifier
+  indicator-name: budget-identifier
+  test-description: economic classification
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `default-aid-type/@code` is not A01
+    and `default-aid-type/@code` is not A02
+    and `transaction/aid-type/@code` is not A01
+    and `transaction/aid-type/@code` is not A02
+    then `capital-spend` exists
+
+- indicator-description: Collaboration Type
+  indicator-name: collaboration-type
+  test-description: Collaboration type
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `collaboration-type` exists
+
+- indicator-description: Collaboration Type
+  indicator-name: collaboration-type
+  test-description: Collaboration type uses standard codelist
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then every `collaboration-type/@code` is on list CollaborationType
+
+- indicator-description: Contact details
+  indicator-name: contact-details
+  test-description: Contact information for the activity
+  test-level: 1
+  expression: >
+    `contact-info` exists
+
+- indicator-description: Contracts
+  indicator-name: contracts
+  test-description: Document - Contract
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `default-aid-type/@code` is not A01
+    and `transaction/aid-type/@code` is not A01
+    then `document-link/category[@code="A06"]` exists
+    or `document-link/category[@code="A11"]` exists
+
+- indicator-description: Budget
+  indicator-name: cost-overall
+  test-description: Budget
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `budget` is available forward
+    or `planned-disbursement` is available forward
+
+- indicator-description: Budget
+  indicator-name: cost-overall
+  test-description: by quarters
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `budget` is available forward by quarters
+    or `planned-disbursement` is available forward by quarters
+
+- indicator-description: Current Status
+  indicator-name: current-status
+  test-description: Activity status
+  test-level: 1
+  expression: >
+    `activity-status` exists
+
+- indicator-description: Current Status
+  indicator-name: current-status
+  test-description: only once
+  test-level: 1
+  expression: >
+    every `activity-status/@code` is on list ActivityStatus
+
+- indicator-description: Actual dates
+  indicator-name: dates-actual
+  test-description: Activity date actual end date
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 3
+    then `activity-date[@type="end-actual"]|activity-date[@type="4"]` exists
+
+- indicator-description: Actual dates
+  indicator-name: dates-actual
+  test-description: Activity date actual start date
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `activity-date[@type="start-actual"]|activity-date[@type="2"]` exists
+
+- indicator-description: Planned dates
+  indicator-name: dates-planned
+  test-description: Activity date planned end date
+  test-level: 1
+  expression: >
+    `activity-date[@type="end-planned"]|activity-date[@type="3"]` exists
+
+- indicator-description: Planned dates
+  indicator-name: dates-planned
+  test-description: Activity date planned start date
+  test-level: 1
+  expression: >
+    `activity-date[@type="start-planned"]|activity-date[@type="1"]` exists
+
+- indicator-description: Description
+  indicator-name: description
+  test-description: Description
+  test-level: 1
+  expression: >
+    `description/text()|description/narrative/text()` exists
+
+- indicator-description: Description
+  indicator-name: description
+  test-description: more than 40 chars
+  test-level: 1
+  expression: >
+    `description/text()|description/narrative/text()` has more than 40 characters
+
+- indicator-description: Evaluations
+  indicator-name: evaluations
+  test-description: Document - Review of project performance and evaluation document
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 3
+    then `document-link/category[@code="A07"]` exists
+
+- indicator-description: Disbursements and expenditure
+  indicator-name: expenditure-actual
+  test-description: Disbursements
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then
+    `transaction/transaction-type[@code="D"] |
+     transaction/transaction-type[@code="3"]`
+    exists
+    or
+    `transaction/transaction-type[@code="E"] |
+     transaction/transaction-type[@code="4"]`
+    exists
+
+- indicator-description: Commitments
+  indicator-name: expenditure-planned
+  test-description: Commitments
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `transaction/transaction-type[@code="C"]` exists
+    or `transaction/transaction-type[@code="2"]` exists
+
+- indicator-description: Finance Type
+  indicator-name: finance-type
+  test-description: Default finance type
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `default-finance-type` exists
+    or `transaction/finance-type` exists
+
+- indicator-description: Finance Type
+  indicator-name: finance-type
+  test-description: Finance type uses standard codelist
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then every `default-finance-type/@code` is on list FinanceType
+    and every `transaction/finance-type/@code` is on list FinanceType
+
+- indicator-description: Flow Type
+  indicator-name: flow-type
+  test-description: Flow type
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `default-flow-type` exists
+    or `transaction/flow-type` exists
+
+- indicator-description: Flow Type
+  indicator-name: flow-type
+  test-description: Flow type uses standard codelist
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then every `default-flow-type/@code` is on list FlowType
+    and every `transaction/flow-type/@code` is on list FlowType
+
+- indicator-description: Impact Appraisals
+  indicator-name: impact-appraisals
+  test-description: Document - Pre- and post-project impact appraisal
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `document-link/category[@code="A01"]` exists
+
+- indicator-description: Implementer
+  indicator-name: implementer
+  test-description: Implementing organisation
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then
+    `participating-org[@role="Implementing"] |
+     participating-org[@role="4"]` exists
+
+- indicator-description: Sub-national location
+  indicator-name: location
+  test-description: Location (sub-national)
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `recipient-region/@code` is not 998
+    then `location` exists
+
+- indicator-description: Sub-national location
+  indicator-name: location
+  test-description: Location (sub-national) coordinates or point
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `recipient-region/@code` is not 998
+    then `location/coordinates` exists
+    or `location/point` exists
+
+- indicator-description: MoU
+  indicator-name: mou
+  test-description: Document - Memorandum of understanding document
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `document-link/category[@code="A09"]` exists
+
+- indicator-description: Objectives
+  indicator-name: objectives
+  test-description: Document - Objectives / Purpose of activity document
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `document-link/category[@code="A02"]` exists
+    or `description[@type="2"]` exists
+
+- indicator-description: Procurement policy
+  indicator-name: procurement-policy
+  test-description: Procurement policy
+  test-level: 3
+  expression: >
+    `document-link/category[@code="B05"]` exists
+
+- indicator-description: Sector
+  indicator-name: sector
+  test-description: Sector
+  test-level: 1
+  expression: >
+    `sector` exists
+    or `transaction/sector` exists
+
+- indicator-description: Sector
+  indicator-name: sector
+  test-description: Sector uses standard codelist
+  test-level: 1
+  expression: >
+    every
+      `sector[@vocabulary="DAC"]/@code |
+       sector[not(@vocabulary)]/@code |
+       sector[@vocabulary="1"]/@code |
+       transaction/sector[@vocabulary="1"]/@code |
+       transaction/sector[not(@vocabulary)]/@code`
+    is on list Sector
+
+- indicator-description: Strategy
+  indicator-name: strategy
+  test-description: Strategy
+  test-level: 3
+  expression: >
+    `document-link/category[@code="B02"]` exists
+
+- indicator-description: Tenders
+  indicator-name: tenders
+  test-description: Document - Tender
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    and `default-aid-type/@code` is not A01
+    and `transaction/aid-type/@code` is not A01
+    then `document-link/category[@code="A10"]` exists
+
+- indicator-description: Tied Aid Status
+  indicator-name: tied-aid-status
+  test-description: Tied aid status
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `default-tied-status` exists
+    or `transaction/tied-status` exists
+
+- indicator-description: Tied Aid Status
+  indicator-name: tied-aid-status
+  test-description: Tied aid status uses standard codelist
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then every `default-tied-status/@code` is on list TiedStatus
+    and every `transaction/tied-status/@code` is on list TiedStatus
+
+- indicator-description: Title
+  indicator-name: title
+  test-description: Title
+  test-level: 1
+  expression: >
+    `title/text()|title/narrative/text()` exists
+
+- indicator-description: Title
+  indicator-name: title
+  test-description: more than 10 chars
+  test-level: 1
+  expression: >
+    `title/text()|title/narrative/text()` has more than 10 characters
+
+- indicator-description: Unique ID
+  indicator-name: unique-id
+  test-description: Unique IATI Identifier
+  test-level: 1
+  expression: >
+    `iati-identifier` exists
+
+- indicator-description: Unique ID
+  indicator-name: unique-id
+  test-description: IATI Identifier starts with reporting org ref
+  test-level: 1
+  expression: >
+    `iati-identifier/text()`
+      starts with `reporting-org/@ref`
+    or `iati-identifier/text()`
+      starts with `other-identifier[@type="B1"]/@ref`
+
+- indicator-description: Conditions
+  indicator-name: conditions
+  test-description: Conditions data
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `conditions` exists
+
+- indicator-description: Conditions
+  indicator-name: conditions
+  test-description: Conditions document
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `document-link/category[@code="A04"]` exists
+
+- indicator-description: Results
+  indicator-name: results
+  test-description: Results data
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `result` exists
+
+- indicator-description: Results
+  indicator-name: results
+  test-description: Results document
+  test-level: 1
+  expression: >
+    if `activity-status/@code` is at least 2
+    then `document-link/category[@code="A08"]` exists
+
+- indicator-description: ""
+  indicator-name: ""
+  test-description: Current data
+  test-level: 1
+  expression: >
+    `activity-date[@type="end-planned"]/@iso-date |
+     activity-date[@type="end-planned"]/text() |
+     activity-date[@type="3"]/@iso-date |
+     activity-date[@type="3"]/text()`
+    is less than 12 months ago
+    or
+    `activity-date[@type="end-actual"]/@iso-date |
+     activity-date[@type="end-actual"]/text() |
+     activity-date[@type="4"]/@iso-date |
+     activity-date[@type="4"]/text()`
+    is less than 12 months ago
+    or
+    for any
+    `transaction[transaction-type/@code="D"] |
+     transaction[transaction-type/@code="E"] |
+     transaction[transaction-type/@code="3"] |
+     transaction[transaction-type/@code="4"]`,
+    `transaction-date/@iso-date` is less than 12 months ago
