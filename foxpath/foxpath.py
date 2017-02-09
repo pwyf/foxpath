@@ -66,15 +66,18 @@ class Foxpath(object):
         def exists(activity, groups, **kwargs):
             return any([val != '' for val in groups[0](activity)])
 
-        # defaults to true
         def is_on_list(activity, groups, **kwargs):
             def check_list(vals, codelist):
                 for v in vals:
                     v = str(v)
                     versions = [v, v.lower(), v.upper()]
                     yield any([v in codelist for v in versions])
-            vals = groups[0](activity)
-            return all(check_list(vals, groups[1](activity)))
+            vals = groups[1](activity)
+            on_list = check_list(vals, groups[2](activity))
+            if groups[0] == 'every':
+                return all(on_list)
+            else:
+                return any(on_list)
 
         # defaults to false
         def is_more_than_x_characters(activity, groups, **kwargs):
@@ -170,6 +173,13 @@ class Foxpath(object):
             els = groups[0](activity)
             return forward_budget(activity, els, 'quarterly')
 
+        ignored_constants = [
+            'at least one',
+            'every',
+        ]
+        if test in ignored_constants:
+            return test
+
         mappings = (
             (re.compile(r'^if (.*) then (.*)$'), if_then, 'if_then'),
             (re.compile(r'\S* codelist$'), codelist, 'codelist'),
@@ -183,7 +193,7 @@ class Foxpath(object):
             (re.compile(r'^(`[^`]+`) is at least (\d+)$'), is_at_least, 'is_at_least'),
             (re.compile(r'^(`[^`]+`) should be present$'), exists, 'exists'),
             (re.compile(r'^(`[^`]+`) should start with (`[^`]+`)$'), starts_with, 'starts_with'),
-            (re.compile(r'^every (`[^`]+`) should be on the (\S* codelist)$'), is_on_list, 'is_on_list'),
+            (re.compile(r'^(at least one|every) (`[^`]+`) should be on the (\S* codelist)$'), is_on_list, 'is_on_list'),
             (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters, 'is_more_than_x_characters'),
             (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago, 'is_less_than_x_months_ago'),
             (re.compile(r'^(`[^`]+`) should be available forward$'), is_available_forward, 'is_available_forward'),
