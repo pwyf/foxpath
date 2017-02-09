@@ -28,7 +28,12 @@ class TestSimple(TestCase):
 
         t = {
             'id': '_',
-            'expression': '`activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-planned"]/text()` is less than 12 months ago or `activity-date[@type="end-actual"]/@iso-date|activity-date[@type="end-actual"]/text()` is less than 12 months ago or for any `transaction[transaction-type/@code="D"]|transaction[transaction-type/@code="E"]`, `transaction-date/@iso-date` is less than 12 months ago',
+            'expression': '''
+                `activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-planned"]/text()` is less than 12 months ago
+                or `activity-date[@type="end-actual"]/@iso-date|activity-date[@type="end-actual"]/text()` is less than 12 months ago
+                or for any `transaction[transaction-type/@code="D"]|transaction[transaction-type/@code="E"]`,
+                    `transaction-date/@iso-date` is less than 12 months ago
+            ''',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -40,7 +45,12 @@ class TestSimple(TestCase):
     def test_a_or_b_exists_if_c_is_at_least_d_and_e_is_not_f(self):
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 and `conditions/@attached` is not 0 then `conditions` should be present or `document-link/category[@code="A04"]` should be present',
+            'expression': '''
+                if `activity-status/@code` is at least 2
+                and `conditions/@attached` is not 0
+                then `conditions` should be present
+                or `document-link/category[@code="A04"]` should be present
+            ''',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -54,7 +64,11 @@ class TestSimple(TestCase):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward annually or `planned-disbursement` should be available forward annually',
+            'expression': '''
+                if `activity-status/@code` is at least 2
+                then `budget` should be available forward annually
+                or `planned-disbursement` should be available forward annually
+            ''',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -68,7 +82,11 @@ class TestSimple(TestCase):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
             'id': '_',
-            'expression': 'if `activity-status/@code` is at least 2 then `budget` should be available forward quarterly or `planned-disbursement` should be available forward quarterly',
+            'expression': '''
+                if `activity-status/@code` is at least 2
+                then `budget` should be available forward quarterly
+                or `planned-disbursement` should be available forward quarterly
+            ''',
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
@@ -80,7 +98,14 @@ class TestSimple(TestCase):
     def test_a_exists_if_b_is_at_least_c_and_d_or_e_is_not_f_or_g(self):
         t = {
                 'id': '_',
-                'expression': 'if `activity-status/@code` is at least 2 and `default-aid-type/@code` is not A01 and `default-aid-type/@code` is not A02 and `transaction/aid-type/@code` is not A01 and `transaction/aid-type/@code` is not A02 then `capital-spend` should be present',
+                'expression': '''
+                    if `activity-status/@code` is at least 2
+                    and `default-aid-type/@code` is not A01
+                    and `default-aid-type/@code` is not A02
+                    and `transaction/aid-type/@code` is not A01
+                    and `transaction/aid-type/@code` is not A02
+                    then `capital-spend` should be present
+                ''',
             }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
