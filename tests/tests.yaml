@@ -53,7 +53,7 @@
 - indicator-description: Budget Identifier
   indicator-name: budget-identifier
   tests:
-   - description: administrative/functional classification
+   - description: Budget identifier, administrative/functional classification
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -63,7 +63,7 @@
       and `transaction/aid-type/@code` is not A02
       then at least one `country-budget-items[@vocabulary="1"]/budget-item/@code` should be on the BudgetIdentifier codelist
 
-   - description: economic classification
+   - description: Budget identifier, economic classification
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -118,7 +118,7 @@
       then `budget` should be available forward annually
       or `planned-disbursement` should be available forward annually
 
-   - description: quarterly
+   - description: Budget, by quarters
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -133,7 +133,7 @@
      expression: >
       `activity-status` should be present
 
-   - description: only once
+   - description: Activity status, only once
      level: 1
      expression: >
       at least one `activity-status/@code` should be on the ActivityStatus codelist
@@ -174,7 +174,7 @@
      expression: >
       `description/text()|description/narrative/text()` should be present
 
-   - description: more than 40 chars
+   - description: Description, more than 40 chars
      level: 1
      expression: >
       `description/text()|description/narrative/text()` should have more than 40 characters
@@ -377,7 +377,7 @@
      expression: >
       `title/text()|title/narrative/text()` should be present
 
-   - description: more than 10 chars
+   - description: Title, more than 10 chars
      level: 1
      expression: >
       `title/text()|title/narrative/text()` should have more than 10 characters
