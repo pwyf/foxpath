@@ -22,7 +22,7 @@ class TestSimple(TestCase):
         self.assertEqual(summary[t['id']]['fail'], 0)
         self.assertEqual(summary[t['id']]['not-relevant'], 0)
 
-    @patch('foxpath.mapping.datetime.date')
+    @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g_months_ago(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
 
@@ -59,7 +59,7 @@ class TestSimple(TestCase):
         self.assertEqual(summary[t['id']]['fail'], 178)
         self.assertEqual(summary[t['id']]['not-relevant'], 82)
 
-    @patch('foxpath.mapping.datetime.date')
+    @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_if_c_is_at_least_d(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
@@ -77,7 +77,7 @@ class TestSimple(TestCase):
         self.assertEqual(summary[t['id']]['fail'], 14)
         self.assertEqual(summary[t['id']]['not-relevant'], 239)
 
-    @patch('foxpath.mapping.datetime.date')
+    @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_by_quarters_if_c_is_at_least_d(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
