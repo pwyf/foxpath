@@ -17,7 +17,7 @@ class TestSimple(TestCase):
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 273)
         self.assertEqual(summary[t['id']]['fail'], 0)
         self.assertEqual(summary[t['id']]['not-relevant'], 0)
@@ -37,7 +37,7 @@ class TestSimple(TestCase):
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 132)
         self.assertEqual(summary[t['id']]['fail'], 141)
         self.assertEqual(summary[t['id']]['not-relevant'], 0)
@@ -54,7 +54,7 @@ class TestSimple(TestCase):
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 13)
         self.assertEqual(summary[t['id']]['fail'], 178)
         self.assertEqual(summary[t['id']]['not-relevant'], 82)
@@ -72,7 +72,7 @@ class TestSimple(TestCase):
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 20)
         self.assertEqual(summary[t['id']]['fail'], 14)
         self.assertEqual(summary[t['id']]['not-relevant'], 239)
@@ -90,7 +90,7 @@ class TestSimple(TestCase):
         }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 0)
         self.assertEqual(summary[t['id']]['fail'], 34)
         self.assertEqual(summary[t['id']]['not-relevant'], 239)
@@ -109,7 +109,7 @@ class TestSimple(TestCase):
             }
         foxpath = Foxpath([t])
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 0)
         self.assertEqual(summary[t['id']]['fail'], 257)
         self.assertEqual(summary[t['id']]['not-relevant'], 16)

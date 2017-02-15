@@ -246,15 +246,19 @@ class Foxpath(object):
         return self.test_activities(activities)
 
     def summarize_results(self, activities_results):
-        summary = {}
         scores = {
             'fail': 0,
             'pass': 0,
             'not-relevant': 0,
         }
+        summary = {
+            'overall': scores.copy(),
+            'by-test': {},
+        }
         for activity_results in activities_results:
             for test_id, result in activity_results.items():
-                if test_id not in summary:
-                    summary[test_id] = scores.copy()
-                summary[test_id][result] += 1
+                if test_id not in summary['by-test']:
+                    summary['by-test'][test_id] = scores.copy()
+                summary['by-test'][test_id][result] += 1
+                summary['overall'][result] += 1
         return summary

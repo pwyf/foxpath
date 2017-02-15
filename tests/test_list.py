@@ -17,7 +17,7 @@ class TestLists(TestCase):
         }
         foxpath = Foxpath([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 20)
         self.assertEqual(summary[t['id']]['fail'], 527)
         self.assertEqual(summary[t['id']]['not-relevant'], 0)
@@ -37,7 +37,7 @@ class TestLists(TestCase):
         }
         foxpath = Foxpath([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 48)
         self.assertEqual(summary[t['id']]['fail'], 485)
         self.assertEqual(summary[t['id']]['not-relevant'], 14)
@@ -51,7 +51,7 @@ class TestLists(TestCase):
         }
         foxpath = Foxpath([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 48)
         self.assertEqual(summary[t['id']]['fail'], 499)
         self.assertEqual(summary[t['id']]['not-relevant'], 0)
@@ -69,7 +69,7 @@ class TestLists(TestCase):
         }
         foxpath = Foxpath([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH)
-        summary = foxpath.summarize_results(result)
+        summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 2)
         self.assertEqual(summary[t['id']]['fail'], 545)
         self.assertEqual(summary[t['id']]['not-relevant'], 0)
