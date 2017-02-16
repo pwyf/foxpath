@@ -260,12 +260,12 @@ class Foxpath(object):
             }
             return results[result_value]
 
-        hierarchy = activity.xpath("@hierarchy")
-        hierarchy = hierarchy[0] if hierarchy != [] else ""
+        hierarchy = activity.xpath('@hierarchy')
+        hierarchy = hierarchy[0] if hierarchy != [] else ''
         try:
             iati_identifier = activity.xpath('iati-identifier/text()')[0]
         except Exception:
-            iati_identifier = "Unknown"
+            iati_identifier = 'Unknown'
         results = {
             test_id: translate_result(test_fn(activity))
             for test_id, test_fn in tests.items()
