@@ -18,6 +18,12 @@ class Foxpath(object):
         }
 
     def parse(self, test, codelists):
+        def mkdate(date_str, default=None):
+            try:
+                return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+            except ValueError:
+                return default
+
         def xpath(activity, groups, **kwargs):
             # [1:-1] gets rid of the backticks
             return activity.xpath(groups[0][1:-1])
@@ -27,6 +33,9 @@ class Foxpath(object):
 
         def code(activity, groups, **kwargs):
             return groups[0]
+
+        def regex(activity, groups, **kwargs):
+            return re.compile(groups[0][6:])
 
         def codelist(activity, groups, codelists, **kwargs):
             # [:-9] gets rid of ' codelist'
@@ -69,6 +78,19 @@ class Foxpath(object):
                 print('note: is_at_least was expecting to find one and only one element. Found {}'.format(len(vals)))
             return any([int(val) >= const for val in vals])
 
+        def is_before(activity, groups, **kwargs):
+            comparison = 'date'
+            less = groups[0](activity)
+            more = groups[1](activity)
+            if len(less) < 1 or len(more) < 1:
+                return None
+            if comparison == 'date':
+                less = mkdate(less[0])
+                more = mkdate(more[0])
+            if less is None or more is None:
+                return None
+            return less <= more
+
         def exists(activity, groups, **kwargs):
             return any([val != '' for val in groups[0](activity)])
 
@@ -84,6 +106,11 @@ class Foxpath(object):
                 return all(on_list)
             else:
                 return any(on_list)
+
+        def matches_regex(activity, groups, **kwargs):
+            exp = groups[0](activity)
+            regex = groups[1](activity)
+            return all([bool(regex.search(x)) for x in exp])
 
         # defaults to false
         def is_more_than_x_characters(activity, groups, **kwargs):
@@ -119,15 +146,8 @@ class Foxpath(object):
             period = groups[1]
             today = datetime.date.today()
 
-            def mkdate(date_str):
-                dt = datetime.datetime.strptime(date_str, '%Y-%m-%d')
-                return dt.date()
-
             def max_date(dates, default):
-                try:
-                    return mkdate(max(dates))
-                except ValueError:
-                    return default
+                return mkdate(max(dates), default)
 
             # Window start is from today onwards. We're only interested in budgets
             # that start or end after today.
@@ -176,31 +196,44 @@ class Foxpath(object):
             return False
 
         ignored_constants = [
-            'at least one',
-            'every',
-            'annually',
-            'quarterly',
+            'at least one', 'every',
+            'annually', 'quarterly',
+            'date',
         ]
         if test in ignored_constants:
             return test
 
+        def is_past(activity, groups, **kwargs):
+            el = groups[0](activity)
+            if len(el) < 1:
+                return None
+            el = mkdate(el[0])
+            if not el:
+                return None
+            today = datetime.date.today()
+            return el <= today
+
         mappings = (
             (re.compile(r'^if (.*) then (.*)$'), if_then),
             (re.compile(r'\S* codelist$'), codelist),
+            (re.compile(r'regex .*$'), regex),
             (re.compile(r'`[^`]+`$'), xpath),
             (re.compile(r'^\d+$'), integer),
             (re.compile(r'[A-Z]+\d+$'), code),
             (re.compile(r'^for any (`[^`]+`), (.*)$'), for_any),
+            (re.compile(r'^(`[^`]+`) (?:should be|is) today, or in the past$'), is_past),
             (re.compile(r'^(.*) or (.*)$'), either),
             (re.compile(r'^(.*) and (.*)$'), both),
-            (re.compile(r'^(`[^`]+`) is not (\S*)$'), is_not),
-            (re.compile(r'^(`[^`]+`) is at least (\d+)$'), is_at_least),
-            (re.compile(r'^(`[^`]+`) should be present$'), exists),
-            (re.compile(r'^(`[^`]+`) should start with (`[^`]+`)$'), starts_with),
-            (re.compile(r'^(at least one|every) (`[^`]+`) should be on the (\S* codelist)$'), is_on_list),
-            (re.compile(r'^(`[^`]+`) should have more than (\d+) characters$'), is_more_than_x_characters),
-            (re.compile(r'^(.*) is less than (\d+) months ago$'), is_less_than_x_months_ago),
-            (re.compile(r'^(`[^`]+`) should be available forward (annually|quarterly)$'), is_available_forward),
+            (re.compile(r'^(`[^`]+`) (?:should be|is) not (\S*)$'), is_not),
+            (re.compile(r'^(`[^`]+`) (?:should be|is) before (`[^`]+`)$'), is_before),
+            (re.compile(r'^(`[^`]+`) (?:should be|is) at least (\d+)$'), is_at_least),
+            (re.compile(r'^(`[^`]+`) (?:should be|is) present$'), exists),
+            (re.compile(r'^(`[^`]+`) (?:should start|starts) with (`[^`]+`)$'), starts_with),
+            (re.compile(r'^(at least one|every) (`[^`]+`) (?:should be|is) on the (\S* codelist)$'), is_on_list),
+            (re.compile(r'^(`[^`]+`) (?:should have|has) more than (\d+) characters$'), is_more_than_x_characters),
+            (re.compile(r'^(.*) (?:should be|is) less than (\d+) months ago$'), is_less_than_x_months_ago),
+            (re.compile(r'^(`[^`]+`) (?:should be|is) available forward (annually|quarterly)$'), is_available_forward),
+            (re.compile(r'^(`[^`]+`) (?:should match|matches) the (regex .*)$'), matches_regex),
         )
         for regex, fn in mappings:
             r = regex.match(test)
