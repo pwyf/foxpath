@@ -32,16 +32,17 @@ class TestFiles(TestCase):
         filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
 
         tests = self.load_expressions_from_yaml(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests.yaml'))
-        foxpath = Foxpath(tests, self.LISTS)
-        result = foxpath.test_doc(filepath)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests(tests, self.LISTS)
+        result = foxpath.test_doc(filepath, tests)
         summary = foxpath.summarize_results(result)
 
-    @patch('foxpath.mapping.datetime.date')
+    @patch('foxpath.foxpath.datetime.date')
     def test_compare_sida(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
-        self.run_comparison('sidatz.xml')
+        self.run_tests('sida-tz.xml')
 
-    @patch('foxpath.mapping.datetime.date')
+    @patch('foxpath.foxpath.datetime.date')
     def test_compare_dfid(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
-        self.run_comparison('dfidtz.xml')
+        self.run_tests('dfid-tz.xml')

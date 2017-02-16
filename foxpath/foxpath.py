@@ -5,14 +5,14 @@ from lxml import etree
 
 
 class Foxpath(object):
-    def __init__(self, tests, codelists=None):
+    def load_tests(self, tests, codelists=None):
         whitespace = re.compile(r'\s+')
 
         def strip_and_parse(expression):
             trimmed_expr = whitespace.sub(' ', expression).strip()
             return self.parse(trimmed_expr, codelists)
 
-        self.tests = {
+        return {
             test['id']: strip_and_parse(test['expression'])
             for test in tests
         }
@@ -245,7 +245,7 @@ class Foxpath(object):
                 return lambda x: fn(x, groups=groups, codelists=codelists)
         raise Exception('I don\'t understand {}'.format(test))
 
-    def test_activity(self, activity):
+    def test_activity(self, activity, tests):
         def translate_result(result_value):
             results = {
                 False: 'fail',
@@ -254,29 +254,29 @@ class Foxpath(object):
             }
             return results[result_value]
 
-        # hierarchy = activity.xpath("@hierarchy")
-        # hierarchy = hierarchy[0] if hierarchy != [] else ""
-        # try:
-        #     iati_identifier = activity.xpath('iati-identifier/text()')[0]
-        # except Exception:
-        #     iati_identifier = "Unknown"
-        return {
+        hierarchy = activity.xpath("@hierarchy")
+        hierarchy = hierarchy[0] if hierarchy != [] else ""
+        try:
+            iati_identifier = activity.xpath('iati-identifier/text()')[0]
+        except Exception:
+            iati_identifier = "Unknown"
+        results = {
             test_id: translate_result(test_fn(activity))
-            for test_id, test_fn in self.tests.items()
+            for test_id, test_fn in tests.items()
         }
-        # return {
-        #     'results': results,
-        #     'iati-identifier': iati_identifier,
-        #     'hierarchy': hierarchy,
-        # }
+        return {
+            'results': results,
+            'iati-identifier': iati_identifier,
+            'hierarchy': hierarchy,
+        }
 
-    def test_activities(self, activities):
-        return [self.test_activity(activity) for activity in activities]
+    def test_activities(self, activities, tests):
+        return [self.test_activity(activity, tests) for activity in activities]
 
-    def test_doc(self, filepath):
+    def test_doc(self, filepath, tests):
         doc = etree.parse(filepath)
         activities = doc.xpath('//iati-activity')
-        return self.test_activities(activities)
+        return self.test_activities(activities, tests)
 
     def summarize_results(self, activities_results):
         scores = {
@@ -289,7 +289,7 @@ class Foxpath(object):
             'by-test': {},
         }
         for activity_results in activities_results:
-            for test_id, result in activity_results.items():
+            for test_id, result in activity_results['results'].items():
                 if test_id not in summary['by-test']:
                     summary['by-test'][test_id] = scores.copy()
                 summary['by-test'][test_id][result] += 1

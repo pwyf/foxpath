@@ -15,8 +15,9 @@ class TestSimple(TestCase):
             'id': '_',
             'expression': '`iati-identifier/text()` should start with `reporting-org/@ref`',
         }
-        foxpath = Foxpath([t])
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 273)
         self.assertEqual(summary[t['id']]['fail'], 0)
@@ -35,8 +36,9 @@ class TestSimple(TestCase):
                     `transaction-date/@iso-date` is less than 12 months ago
             ''',
         }
-        foxpath = Foxpath([t])
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 132)
         self.assertEqual(summary[t['id']]['fail'], 141)
@@ -52,8 +54,9 @@ class TestSimple(TestCase):
                 or `document-link/category[@code="A04"]` should be present
             ''',
         }
-        foxpath = Foxpath([t])
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 13)
         self.assertEqual(summary[t['id']]['fail'], 178)
@@ -70,8 +73,9 @@ class TestSimple(TestCase):
                 or `planned-disbursement` should be available forward annually
             ''',
         }
-        foxpath = Foxpath([t])
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 20)
         self.assertEqual(summary[t['id']]['fail'], 14)
@@ -88,8 +92,9 @@ class TestSimple(TestCase):
                 or `planned-disbursement` should be available forward quarterly
             ''',
         }
-        foxpath = Foxpath([t])
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 0)
         self.assertEqual(summary[t['id']]['fail'], 34)
@@ -107,8 +112,9 @@ class TestSimple(TestCase):
                     then `capital-spend` should be present
                 ''',
             }
-        foxpath = Foxpath([t])
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 0)
         self.assertEqual(summary[t['id']]['fail'], 257)

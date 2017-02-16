@@ -15,8 +15,9 @@ class TestLists(TestCase):
                 at least one `sector[@vocabulary="DAC"]/@code | sector[not(@vocabulary)]/@code`
                 should be on the Sector codelist''',
         }
-        foxpath = Foxpath([t], self.LISTS)
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t], self.LISTS)
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 20)
         self.assertEqual(summary[t['id']]['fail'], 527)
@@ -35,8 +36,9 @@ class TestLists(TestCase):
                 should be on the BudgetIdentifier codelist
             ''',
         }
-        foxpath = Foxpath([t], self.LISTS)
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t], self.LISTS)
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 48)
         self.assertEqual(summary[t['id']]['fail'], 485)
@@ -49,8 +51,9 @@ class TestLists(TestCase):
                 at least one `country-budget-items[@vocabulary="1"]/budget-item/@code`
                 should be on the BudgetIdentifier codelist''',
         }
-        foxpath = Foxpath([t], self.LISTS)
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t], self.LISTS)
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 48)
         self.assertEqual(summary[t['id']]['fail'], 499)
@@ -67,8 +70,9 @@ class TestLists(TestCase):
                 should be on the AidType codelist
             ''',
         }
-        foxpath = Foxpath([t], self.LISTS)
-        result = foxpath.test_doc(self.FILEPATH)
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t], self.LISTS)
+        result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
         self.assertEqual(summary[t['id']]['pass'], 2)
         self.assertEqual(summary[t['id']]['fail'], 545)
