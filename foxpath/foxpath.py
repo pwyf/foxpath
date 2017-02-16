@@ -18,11 +18,11 @@ class Foxpath(object):
         }
 
     def parse(self, test, codelists):
-        def mkdate(date_str, default=None):
+        def mkdate(date_str):
             try:
                 return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
             except ValueError:
-                return default
+                return None
 
         def xpath(activity, groups, **kwargs):
             # [1:-1] gets rid of the backticks
@@ -130,7 +130,10 @@ class Foxpath(object):
         def is_less_than_x_months_ago(activity, groups, **kwargs):
             current_date = datetime.date.today()
             def less_than_x_months_ago(date_str, months_ago):
-                date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+                date = mkdate(date_str)
+                if not date:
+                    # date was invalid, so just fail
+                    return False
                 year_diff = current_date.year - date.year
                 month_diff = 12 * year_diff + current_date.month - date.month
                 if month_diff == months_ago:
@@ -147,7 +150,10 @@ class Foxpath(object):
             today = datetime.date.today()
 
             def max_date(dates, default):
-                return mkdate(max(dates), default)
+                if dates != []:
+                    return max(filter(lambda x: x is not None, [mkdate(d) for d in dates]))
+                else:
+                    return default
 
             # Window start is from today onwards. We're only interested in budgets
             # that start or end after today.
