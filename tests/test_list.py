@@ -10,7 +10,7 @@ class TestLists(TestCase):
 
     def test_at_least_one_a_or_b_is_on_list_c(self):
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 at least one `sector[@vocabulary="DAC"]/@code | sector[not(@vocabulary)]/@code`
                 should be on the Sector codelist''',
@@ -19,13 +19,13 @@ class TestLists(TestCase):
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 20)
-        self.assertEqual(summary[t['id']]['fail'], 527)
-        self.assertEqual(summary[t['id']]['not-relevant'], 0)
+        self.assertEqual(summary[t['name']]['pass'], 20)
+        self.assertEqual(summary[t['name']]['fail'], 527)
+        self.assertEqual(summary[t['name']]['not-relevant'], 0)
 
     def test_at_least_one_a_is_on_list_b_if_c_is_at_least_d_and_e_or_f_is_not_g_or_h(self):
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 if `activity-status/@code` is at least 2
                 and `default-aid-type/@code` is not A01
@@ -40,13 +40,13 @@ class TestLists(TestCase):
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 48)
-        self.assertEqual(summary[t['id']]['fail'], 485)
-        self.assertEqual(summary[t['id']]['not-relevant'], 14)
+        self.assertEqual(summary[t['name']]['pass'], 48)
+        self.assertEqual(summary[t['name']]['fail'], 485)
+        self.assertEqual(summary[t['name']]['not-relevant'], 14)
 
     def test_at_least_one_a_is_on_list_b(self):
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 at least one `country-budget-items[@vocabulary="1"]/budget-item/@code`
                 should be on the BudgetIdentifier codelist''',
@@ -55,13 +55,13 @@ class TestLists(TestCase):
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 48)
-        self.assertEqual(summary[t['id']]['fail'], 499)
-        self.assertEqual(summary[t['id']]['not-relevant'], 0)
+        self.assertEqual(summary[t['name']]['pass'], 48)
+        self.assertEqual(summary[t['name']]['fail'], 499)
+        self.assertEqual(summary[t['name']]['not-relevant'], 0)
 
     def test_a_or_b_is_on_list_c_if_d_is_at_least_e(self):
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 if `activity-status/@code` is at least 2
                 then at least one `default-aid-type/@code`
@@ -74,6 +74,6 @@ class TestLists(TestCase):
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 2)
-        self.assertEqual(summary[t['id']]['fail'], 545)
-        self.assertEqual(summary[t['id']]['not-relevant'], 0)
+        self.assertEqual(summary[t['name']]['pass'], 2)
+        self.assertEqual(summary[t['name']]['fail'], 545)
+        self.assertEqual(summary[t['name']]['not-relevant'], 0)

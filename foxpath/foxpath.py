@@ -13,7 +13,7 @@ class Foxpath(object):
             return self.parse(trimmed_expr, codelists)
 
         return {
-            test['id']: strip_and_parse(test['expression'])
+            test['name']: strip_and_parse(test['expression'])
             for test in tests
         }
 

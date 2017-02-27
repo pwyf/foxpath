@@ -19,11 +19,7 @@ class TestFiles(TestCase):
         with open(filename) as f:
             reader = yaml.load(f)
             return [
-                {
-                    'id': t['description'],
-                    'expression': t['expression'],
-                }
-                for indicator in reader for t in indicator['tests']
+                t for indicator in reader for t in indicator['tests']
             ]
 
     LISTS = codelists.CODELISTS

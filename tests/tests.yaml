@@ -1,48 +1,43 @@
-- indicator-description: Aid Type
-  indicator-name: aid-type
+- indicator-name: Aid Type
   tests:
-   - description: Default aid type
+   - name: Default aid type
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `default-aid-type` should be present
       or `transaction/aid-type` should be present
 
-   - description: Aid type uses standard codelist
+   - name: Aid type uses standard codelist
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then at least one `default-aid-type/@code` should be on the AidType codelist
       or at least one `transaction/aid-type/@code` should be on the AidType codelist
 
-- indicator-description: Allocation policy
-  indicator-name: allocation
+- indicator-name: Allocation policy
   tests:
-   - description: Allocation policy
+   - name: Allocation policy
      level: 3
      expression: >
       `document-link/category[@code="B04"]` should be present
 
-- indicator-description: Annual report
-  indicator-name: annual-report
+- indicator-name: Annual report
   tests:
-   - description: Annual report
+   - name: Annual report
      level: 3
      expression: >
       `document-link/category[@code="B01"]` should be present
 
-- indicator-description: Audit
-  indicator-name: audit
+- indicator-name: Audit
   tests:
-   - description: Audit
+   - name: Audit
      level: 3
      expression: >
       `document-link/category[@code="B06"]` should be present
 
-- indicator-description: Budget Docs
-  indicator-name: budget
+- indicator-name: Budget Docs
   tests:
-   - description: Document - Budget document
+   - name: Document - Budget document
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -50,10 +45,9 @@
       and `transaction/aid-type/@code` is not A01
       then `document-link/category[@code="A05"]` should be present
 
-- indicator-description: Budget Identifier
-  indicator-name: budget-identifier
+- indicator-name: Budget Identifier
   tests:
-   - description: Budget identifier, administrative/functional classification
+   - name: Budget identifier, administrative/functional classification
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -63,7 +57,7 @@
       and `transaction/aid-type/@code` is not A02
       then at least one `country-budget-items[@vocabulary="1"]/budget-item/@code` should be on the BudgetIdentifier codelist
 
-   - description: Budget identifier, economic classification
+   - name: Budget identifier, economic classification
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -73,33 +67,30 @@
       and `transaction/aid-type/@code` is not A02
       then `capital-spend` should be present
 
-- indicator-description: Collaboration Type
-  indicator-name: collaboration-type
+- indicator-name: Collaboration Type
   tests:
-   - description: Collaboration type
+   - name: Collaboration type
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `collaboration-type` should be present
 
-   - description: Collaboration type uses standard codelist
+   - name: Collaboration type uses standard codelist
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then at least one `collaboration-type/@code` should be on the CollaborationType codelist
 
-- indicator-description: Contact details
-  indicator-name: contact-details
+- indicator-name: Contact details
   tests:
-   - description: Contact information for the activity
+   - name: Contact information for the activity
      level: 1
      expression: >
       `contact-info` should be present
 
-- indicator-description: Contracts
-  indicator-name: contracts
+- indicator-name: Contracts
   tests:
-   - description: Document - Contract
+   - name: Document - Contract
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -108,90 +99,83 @@
       then `document-link/category[@code="A06"]` should be present
       or `document-link/category[@code="A11"]` should be present
 
-- indicator-description: Budget
-  indicator-name: cost-overall
+- indicator-name: Budget
   tests:
-   - description: Budget
+   - name: Budget
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `budget` should be available forward annually
       or `planned-disbursement` should be available forward annually
 
-   - description: Budget, by quarters
+   - name: Budget, by quarters
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `budget` should be available forward quarterly
       or `planned-disbursement` should be available forward quarterly
 
-- indicator-description: Current Status
-  indicator-name: current-status
+- indicator-name: Current Status
   tests:
-   - description: Activity status
+   - name: Activity status
      level: 1
      expression: >
       `activity-status` should be present
 
-   - description: Activity status, only once
+   - name: Activity status, only once
      level: 1
      expression: >
       at least one `activity-status/@code` should be on the ActivityStatus codelist
 
-- indicator-description: Actual dates
-  indicator-name: dates-actual
+- indicator-name: Actual dates
   tests:
-   - description: Activity date actual end date
+   - name: Activity date actual end date
      level: 1
      expression: >
       if `activity-status/@code` is at least 3
       then `activity-date[@type="end-actual"]|activity-date[@type="4"]` should be present
 
-   - description: Activity date actual start date
+   - name: Activity date actual start date
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `activity-date[@type="start-actual"]|activity-date[@type="2"]` should be present
 
-- indicator-description: Planned dates
-  indicator-name: dates-planned
+- indicator-name: Planned dates
   tests:
-   - description: Activity date planned end date
+   - name: Activity date planned end date
      level: 1
      expression: >
       `activity-date[@type="end-planned"]|activity-date[@type="3"]` should be present
 
-   - description: Activity date planned start date
+   - name: Activity date planned start date
      level: 1
      expression: >
       `activity-date[@type="start-planned"]|activity-date[@type="1"]` should be present
 
-- indicator-description: Description
-  indicator-name: description
+- indicator-name: Description
   tests:
-   - description: Description
+   - name: Description
      level: 1
      expression: >
       `description/text()|description/narrative/text()` should be present
 
-   - description: Description, more than 40 chars
+   - name: Description, more than 40 chars
      level: 1
      expression: >
       `description/text()|description/narrative/text()` should have more than 40 characters
 
-- indicator-description: Evaluations
-  indicator-name: evaluations
+- indicator-name: Evaluations
   tests:
-   - description: Document - Review of project performance and evaluation document
+   - name: Document - Review of project performance and evaluation document
      level: 1
      expression: >
       if `activity-status/@code` is at least 3
       then `document-link/category[@code="A07"]` should be present
 
-- indicator-description: Disbursements and expenditure
-  indicator-name: expenditure-actual
+- indicator-name: Disbursements and expenditure
   tests:
-   - description: Disbursements
+   - name: Disbursements
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -204,63 +188,58 @@
        transaction/transaction-type[@code="4"]`
       should be present
 
-- indicator-description: Commitments
-  indicator-name: expenditure-planned
+- indicator-name: Commitments
   tests:
-   - description: Commitments
+   - name: Commitments
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `transaction/transaction-type[@code="C"]` should be present
       or `transaction/transaction-type[@code="2"]` should be present
 
-- indicator-description: Finance Type
-  indicator-name: finance-type
+- indicator-name: Finance Type
   tests:
-   - description: Default finance type
+   - name: Default finance type
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `default-finance-type` should be present
       or `transaction/finance-type` should be present
 
-   - description: Finance type uses standard codelist
+   - name: Finance type uses standard codelist
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then at least one `default-finance-type/@code` should be on the FinanceType codelist
       or at least one `transaction/finance-type/@code` should be on the FinanceType codelist
 
-- indicator-description: Flow Type
-  indicator-name: flow-type
+- indicator-name: Flow Type
   tests:
-   - description: Flow type
+   - name: Flow type
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `default-flow-type` should be present
       or `transaction/flow-type` should be present
 
-   - description: Flow type uses standard codelist
+   - name: Flow type uses standard codelist
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then at least one `default-flow-type/@code` should be on the FlowType codelist
       or at least one `transaction/flow-type/@code` should be on the FlowType codelist
 
-- indicator-description: Impact Appraisals
-  indicator-name: impact-appraisals
+- indicator-name: Impact Appraisals
   tests:
-   - description: Document - Pre- and post-project impact appraisal
+   - name: Document - Pre- and post-project impact appraisal
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A01"]` should be present
 
-- indicator-description: Implementer
-  indicator-name: implementer
+- indicator-name: Implementer
   tests:
-   - description: Implementing organisation
+   - name: Implementing organisation
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -268,17 +247,16 @@
       `participating-org[@role="Implementing"] |
        participating-org[@role="4"]` should be present
 
-- indicator-description: Sub-national location
-  indicator-name: location
+- indicator-name: Sub-national location
   tests:
-   - description: Location (sub-national)
+   - name: Location (sub-national)
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       and `recipient-region/@code` is not 998
       then `location` should be present
 
-   - description: Location (sub-national) coordinates or point
+   - name: Location (sub-national) coordinates or point
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -286,43 +264,39 @@
       then `location/coordinates` should be present
       or `location/point` should be present
 
-- indicator-description: MoU
-  indicator-name: mou
+- indicator-name: MoU
   tests:
-   - description: Document - Memorandum of understanding document
+   - name: Document - Memorandum of understanding document
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A09"]` should be present
 
-- indicator-description: Objectives
-  indicator-name: objectives
+- indicator-name: Objectives
   tests:
-   - description: Document - Objectives / Purpose of activity document
+   - name: Document - Objectives / Purpose of activity document
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A02"]` should be present
       or `description[@type="2"]` should be present
 
-- indicator-description: Procurement policy
-  indicator-name: procurement-policy
+- indicator-name: Procurement policy
   tests:
-   - description: Procurement policy
+   - name: Procurement policy
      level: 3
      expression: >
       `document-link/category[@code="B05"]` should be present
 
-- indicator-description: Sector
-  indicator-name: sector
+- indicator-name: Sector
   tests:
-   - description: Sector
+   - name: Sector
      level: 1
      expression: >
       `sector` should be present
       or `transaction/sector` should be present
 
-   - description: Sector uses standard codelist
+   - name: Sector uses standard codelist
      level: 1
      expression: >
       at least one
@@ -333,18 +307,16 @@
          transaction/sector[not(@vocabulary)]/@code`
       should be on the Sector codelist
 
-- indicator-description: Strategy
-  indicator-name: strategy
+- indicator-name: Strategy
   tests:
-   - description: Strategy
+   - name: Strategy
      level: 3
      expression: >
       `document-link/category[@code="B02"]` should be present
 
-- indicator-description: Tenders
-  indicator-name: tenders
+- indicator-name: Tenders
   tests:
-   - description: Document - Tender
+   - name: Document - Tender
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
@@ -352,45 +324,42 @@
       and `transaction/aid-type/@code` is not A01
       then `document-link/category[@code="A10"]` should be present
 
-- indicator-description: Tied Aid Status
-  indicator-name: tied-aid-status
+- indicator-name: Tied Aid Status
   tests:
-   - description: Tied aid status
+   - name: Tied aid status
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `default-tied-status` should be present
       or `transaction/tied-status` should be present
 
-   - description: Tied aid status uses standard codelist
+   - name: Tied aid status uses standard codelist
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then at least one `default-tied-status/@code` should be on the TiedStatus codelist
       or at least one `transaction/tied-status/@code` should be on the TiedStatus codelist
 
-- indicator-description: Title
-  indicator-name: title
+- indicator-name: Title
   tests:
-   - description: Title
+   - name: Title
      level: 1
      expression: >
       `title/text()|title/narrative/text()` should be present
 
-   - description: Title, more than 10 chars
+   - name: Title, more than 10 chars
      level: 1
      expression: >
       `title/text()|title/narrative/text()` should have more than 10 characters
 
-- indicator-description: Unique ID
-  indicator-name: unique-id
+- indicator-name: Unique ID
   tests:
-   - description: Unique IATI Identifier
+   - name: Unique IATI Identifier
      level: 1
      expression: >
       `iati-identifier` should be present
 
-   - description: IATI Identifier starts with reporting org ref
+   - name: IATI Identifier starts with reporting org ref
      level: 1
      expression: >
       `iati-identifier/text()`
@@ -398,40 +367,37 @@
       or `iati-identifier/text()`
         should start with `other-identifier[@type="B1"]/@ref`
 
-- indicator-description: Conditions
-  indicator-name: conditions
+- indicator-name: Conditions
   tests:
-   - description: Conditions data
+   - name: Conditions data
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `conditions` should be present
 
-   - description: Conditions document
+   - name: Conditions document
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A04"]` should be present
 
-- indicator-description: Results
-  indicator-name: results
+- indicator-name: Results
   tests:
-   - description: Results data
+   - name: Results data
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `result` should be present
 
-   - description: Results document
+   - name: Results document
      level: 1
      expression: >
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A08"]` should be present
 
-- indicator-description: ""
-  indicator-name: ""
+- indicator-name: ""
   tests:
-   - description: Current data
+   - name: Current data
      level: 1
      expression: >
       `activity-date[@type="end-planned"]/@iso-date |

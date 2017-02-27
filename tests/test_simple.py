@@ -12,23 +12,23 @@ class TestSimple(TestCase):
 
     def test_a_starts_with_b(self):
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '`iati-identifier/text()` should start with `reporting-org/@ref`',
         }
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 273)
-        self.assertEqual(summary[t['id']]['fail'], 0)
-        self.assertEqual(summary[t['id']]['not-relevant'], 0)
+        self.assertEqual(summary[t['name']]['pass'], 273)
+        self.assertEqual(summary[t['name']]['fail'], 0)
+        self.assertEqual(summary[t['name']]['not-relevant'], 0)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g_months_ago(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
 
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 `activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-planned"]/text()` is less than 12 months ago
                 or `activity-date[@type="end-actual"]/@iso-date|activity-date[@type="end-actual"]/text()` is less than 12 months ago
@@ -40,13 +40,13 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 132)
-        self.assertEqual(summary[t['id']]['fail'], 141)
-        self.assertEqual(summary[t['id']]['not-relevant'], 0)
+        self.assertEqual(summary[t['name']]['pass'], 132)
+        self.assertEqual(summary[t['name']]['fail'], 141)
+        self.assertEqual(summary[t['name']]['not-relevant'], 0)
 
     def test_a_or_b_exists_if_c_is_at_least_d_and_e_is_not_f(self):
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 if `activity-status/@code` is at least 2
                 and `conditions/@attached` is not 0
@@ -58,15 +58,15 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 13)
-        self.assertEqual(summary[t['id']]['fail'], 178)
-        self.assertEqual(summary[t['id']]['not-relevant'], 82)
+        self.assertEqual(summary[t['name']]['pass'], 13)
+        self.assertEqual(summary[t['name']]['fail'], 178)
+        self.assertEqual(summary[t['name']]['not-relevant'], 82)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_if_c_is_at_least_d(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 if `activity-status/@code` is at least 2
                 then `budget` should be available forward annually
@@ -77,15 +77,15 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 20)
-        self.assertEqual(summary[t['id']]['fail'], 14)
-        self.assertEqual(summary[t['id']]['not-relevant'], 239)
+        self.assertEqual(summary[t['name']]['pass'], 20)
+        self.assertEqual(summary[t['name']]['fail'], 14)
+        self.assertEqual(summary[t['name']]['not-relevant'], 239)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_by_quarters_if_c_is_at_least_d(self, mock_date):
         mock_date.today.return_value = date(2015, 12, 1)
         t = {
-            'id': '_',
+            'name': '_',
             'expression': '''
                 if `activity-status/@code` is at least 2
                 then `budget` should be available forward quarterly
@@ -96,13 +96,13 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 0)
-        self.assertEqual(summary[t['id']]['fail'], 34)
-        self.assertEqual(summary[t['id']]['not-relevant'], 239)
+        self.assertEqual(summary[t['name']]['pass'], 0)
+        self.assertEqual(summary[t['name']]['fail'], 34)
+        self.assertEqual(summary[t['name']]['not-relevant'], 239)
 
     def test_a_exists_if_b_is_at_least_c_and_d_or_e_is_not_f_or_g(self):
         t = {
-                'id': '_',
+                'name': '_',
                 'expression': '''
                     if `activity-status/@code` is at least 2
                     and `default-aid-type/@code` is not A01
@@ -116,6 +116,6 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['id']]['pass'], 0)
-        self.assertEqual(summary[t['id']]['fail'], 257)
-        self.assertEqual(summary[t['id']]['not-relevant'], 16)
+        self.assertEqual(summary[t['name']]['pass'], 0)
+        self.assertEqual(summary[t['name']]['fail'], 257)
+        self.assertEqual(summary[t['name']]['not-relevant'], 16)
