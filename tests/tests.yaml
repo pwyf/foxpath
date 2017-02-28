@@ -1,4 +1,4 @@
-- indicator-name: Aid Type
+- name: Aid Type
   tests:
    - name: Default aid type
      level: 1
@@ -14,28 +14,28 @@
       then at least one `default-aid-type/@code` should be on the AidType codelist
       or at least one `transaction/aid-type/@code` should be on the AidType codelist
 
-- indicator-name: Allocation policy
+- name: Allocation policy
   tests:
    - name: Allocation policy
      level: 3
      expression: >
       `document-link/category[@code="B04"]` should be present
 
-- indicator-name: Annual report
+- name: Annual report
   tests:
    - name: Annual report
      level: 3
      expression: >
       `document-link/category[@code="B01"]` should be present
 
-- indicator-name: Audit
+- name: Audit
   tests:
    - name: Audit
      level: 3
      expression: >
       `document-link/category[@code="B06"]` should be present
 
-- indicator-name: Budget Docs
+- name: Budget Docs
   tests:
    - name: Document - Budget document
      level: 1
@@ -45,7 +45,7 @@
       and `transaction/aid-type/@code` is not A01
       then `document-link/category[@code="A05"]` should be present
 
-- indicator-name: Budget Identifier
+- name: Budget Identifier
   tests:
    - name: Budget identifier, administrative/functional classification
      level: 1
@@ -67,7 +67,7 @@
       and `transaction/aid-type/@code` is not A02
       then `capital-spend` should be present
 
-- indicator-name: Collaboration Type
+- name: Collaboration Type
   tests:
    - name: Collaboration type
      level: 1
@@ -81,14 +81,14 @@
       if `activity-status/@code` is at least 2
       then at least one `collaboration-type/@code` should be on the CollaborationType codelist
 
-- indicator-name: Contact details
+- name: Contact details
   tests:
    - name: Contact information for the activity
      level: 1
      expression: >
       `contact-info` should be present
 
-- indicator-name: Contracts
+- name: Contracts
   tests:
    - name: Document - Contract
      level: 1
@@ -99,7 +99,7 @@
       then `document-link/category[@code="A06"]` should be present
       or `document-link/category[@code="A11"]` should be present
 
-- indicator-name: Budget
+- name: Budget
   tests:
    - name: Budget
      level: 1
@@ -115,7 +115,7 @@
       then `budget` should be available forward quarterly
       or `planned-disbursement` should be available forward quarterly
 
-- indicator-name: Current Status
+- name: Current Status
   tests:
    - name: Activity status
      level: 1
@@ -127,7 +127,7 @@
      expression: >
       at least one `activity-status/@code` should be on the ActivityStatus codelist
 
-- indicator-name: Actual dates
+- name: Actual dates
   tests:
    - name: Activity date actual end date
      level: 1
@@ -141,7 +141,7 @@
       if `activity-status/@code` is at least 2
       then `activity-date[@type="start-actual"]|activity-date[@type="2"]` should be present
 
-- indicator-name: Planned dates
+- name: Planned dates
   tests:
    - name: Activity date planned end date
      level: 1
@@ -153,7 +153,7 @@
      expression: >
       `activity-date[@type="start-planned"]|activity-date[@type="1"]` should be present
 
-- indicator-name: Description
+- name: Description
   tests:
    - name: Description
      level: 1
@@ -165,7 +165,7 @@
      expression: >
       `description/text()|description/narrative/text()` should have more than 40 characters
 
-- indicator-name: Evaluations
+- name: Evaluations
   tests:
    - name: Document - Review of project performance and evaluation document
      level: 1
@@ -173,7 +173,7 @@
       if `activity-status/@code` is at least 3
       then `document-link/category[@code="A07"]` should be present
 
-- indicator-name: Disbursements and expenditure
+- name: Disbursements and expenditure
   tests:
    - name: Disbursements
      level: 1
@@ -188,7 +188,7 @@
        transaction/transaction-type[@code="4"]`
       should be present
 
-- indicator-name: Commitments
+- name: Commitments
   tests:
    - name: Commitments
      level: 1
@@ -197,7 +197,7 @@
       then `transaction/transaction-type[@code="C"]` should be present
       or `transaction/transaction-type[@code="2"]` should be present
 
-- indicator-name: Finance Type
+- name: Finance Type
   tests:
    - name: Default finance type
      level: 1
@@ -213,7 +213,7 @@
       then at least one `default-finance-type/@code` should be on the FinanceType codelist
       or at least one `transaction/finance-type/@code` should be on the FinanceType codelist
 
-- indicator-name: Flow Type
+- name: Flow Type
   tests:
    - name: Flow type
      level: 1
@@ -229,7 +229,7 @@
       then at least one `default-flow-type/@code` should be on the FlowType codelist
       or at least one `transaction/flow-type/@code` should be on the FlowType codelist
 
-- indicator-name: Impact Appraisals
+- name: Impact Appraisals
   tests:
    - name: Document - Pre- and post-project impact appraisal
      level: 1
@@ -237,7 +237,7 @@
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A01"]` should be present
 
-- indicator-name: Implementer
+- name: Implementer
   tests:
    - name: Implementing organisation
      level: 1
@@ -247,7 +247,7 @@
       `participating-org[@role="Implementing"] |
        participating-org[@role="4"]` should be present
 
-- indicator-name: Sub-national location
+- name: Sub-national location
   tests:
    - name: Location (sub-national)
      level: 1
@@ -264,7 +264,7 @@
       then `location/coordinates` should be present
       or `location/point` should be present
 
-- indicator-name: MoU
+- name: MoU
   tests:
    - name: Document - Memorandum of understanding document
      level: 1
@@ -272,7 +272,7 @@
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A09"]` should be present
 
-- indicator-name: Objectives
+- name: Objectives
   tests:
    - name: Document - Objectives / Purpose of activity document
      level: 1
@@ -281,14 +281,14 @@
       then `document-link/category[@code="A02"]` should be present
       or `description[@type="2"]` should be present
 
-- indicator-name: Procurement policy
+- name: Procurement policy
   tests:
    - name: Procurement policy
      level: 3
      expression: >
       `document-link/category[@code="B05"]` should be present
 
-- indicator-name: Sector
+- name: Sector
   tests:
    - name: Sector
      level: 1
@@ -307,14 +307,14 @@
          transaction/sector[not(@vocabulary)]/@code`
       should be on the Sector codelist
 
-- indicator-name: Strategy
+- name: Strategy
   tests:
    - name: Strategy
      level: 3
      expression: >
       `document-link/category[@code="B02"]` should be present
 
-- indicator-name: Tenders
+- name: Tenders
   tests:
    - name: Document - Tender
      level: 1
@@ -324,7 +324,7 @@
       and `transaction/aid-type/@code` is not A01
       then `document-link/category[@code="A10"]` should be present
 
-- indicator-name: Tied Aid Status
+- name: Tied Aid Status
   tests:
    - name: Tied aid status
      level: 1
@@ -340,7 +340,7 @@
       then at least one `default-tied-status/@code` should be on the TiedStatus codelist
       or at least one `transaction/tied-status/@code` should be on the TiedStatus codelist
 
-- indicator-name: Title
+- name: Title
   tests:
    - name: Title
      level: 1
@@ -352,7 +352,7 @@
      expression: >
       `title/text()|title/narrative/text()` should have more than 10 characters
 
-- indicator-name: Unique ID
+- name: Unique ID
   tests:
    - name: Unique IATI Identifier
      level: 1
@@ -367,7 +367,7 @@
       or `iati-identifier/text()`
         should start with `other-identifier[@type="B1"]/@ref`
 
-- indicator-name: Conditions
+- name: Conditions
   tests:
    - name: Conditions data
      level: 1
@@ -381,7 +381,7 @@
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A04"]` should be present
 
-- indicator-name: Results
+- name: Results
   tests:
    - name: Results data
      level: 1
@@ -395,7 +395,7 @@
       if `activity-status/@code` is at least 2
       then `document-link/category[@code="A08"]` should be present
 
-- indicator-name: ""
+- name: ""
   tests:
    - name: Current data
      level: 1
