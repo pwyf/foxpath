@@ -291,7 +291,6 @@ class Foxpath(object):
             'not-relevant': 0,
         }
         summary = {
-            'overall': scores.copy(),
             'by-test': {},
         }
         for activity_results in activities_results:
@@ -299,5 +298,4 @@ class Foxpath(object):
                 if test_id not in summary['by-test']:
                     summary['by-test'][test_id] = scores.copy()
                 summary['by-test'][test_id][result] += 1
-                summary['overall'][result] += 1
         return summary
