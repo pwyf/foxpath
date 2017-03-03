@@ -254,9 +254,9 @@ class Foxpath(object):
     def test_activity(self, activity, tests):
         def translate_result(result_value):
             results = {
-                False: 'fail',
-                True: 'pass',
-                None: 'not-relevant',
+                True: 1,
+                False: 0,
+                None: -1,
             }
             return results[result_value]
 
@@ -266,10 +266,10 @@ class Foxpath(object):
             iati_identifier = activity.xpath('iati-identifier/text()')[0]
         except Exception:
             iati_identifier = 'Unknown'
-        results = {
-            test_id: translate_result(test_fn(activity))
+        results = [
+            translate_result(test_fn(activity))
             for test_id, test_fn in tests.items()
-        }
+        ]
         return {
             'results': results,
             'iati-identifier': iati_identifier,
@@ -286,14 +286,12 @@ class Foxpath(object):
 
     def summarize_results(self, activities_results):
         scores = {
-            'fail': 0,
-            'pass': 0,
-            'not-relevant': 0,
+            1: 0,
+            0: 0,
+            -1: 0,
         }
-        summary = {}
+        summary = [scores.copy() for x in range(len(activities_results[0]['results']))]
         for activity_results in activities_results:
-            for test_id, result in activity_results['results'].items():
-                if test_id not in summary:
-                    summary[test_id] = scores.copy()
-                summary[test_id][result] += 1
+            for test_idx, result in enumerate(activity_results['results']):
+                summary[test_idx][result] += 1
         return summary

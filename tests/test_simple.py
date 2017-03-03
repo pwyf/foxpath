@@ -18,10 +18,10 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 273)
-        self.assertEqual(summary[t['name']]['fail'], 0)
-        self.assertEqual(summary[t['name']]['not-relevant'], 0)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 273)
+        self.assertEqual(summary[0][0], 0)
+        self.assertEqual(summary[0][-1], 0)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g_months_ago(self, mock_date):
@@ -39,10 +39,10 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 132)
-        self.assertEqual(summary[t['name']]['fail'], 141)
-        self.assertEqual(summary[t['name']]['not-relevant'], 0)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 132)
+        self.assertEqual(summary[0][0], 141)
+        self.assertEqual(summary[0][-1], 0)
 
     def test_a_or_b_exists_if_c_is_at_least_d_and_e_is_not_f(self):
         t = {
@@ -57,10 +57,10 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 13)
-        self.assertEqual(summary[t['name']]['fail'], 178)
-        self.assertEqual(summary[t['name']]['not-relevant'], 82)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 13)
+        self.assertEqual(summary[0][0], 178)
+        self.assertEqual(summary[0][-1], 82)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_if_c_is_at_least_d(self, mock_date):
@@ -76,10 +76,10 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 20)
-        self.assertEqual(summary[t['name']]['fail'], 14)
-        self.assertEqual(summary[t['name']]['not-relevant'], 239)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 20)
+        self.assertEqual(summary[0][0], 14)
+        self.assertEqual(summary[0][-1], 239)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_by_quarters_if_c_is_at_least_d(self, mock_date):
@@ -95,10 +95,10 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 0)
-        self.assertEqual(summary[t['name']]['fail'], 34)
-        self.assertEqual(summary[t['name']]['not-relevant'], 239)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 0)
+        self.assertEqual(summary[0][0], 34)
+        self.assertEqual(summary[0][-1], 239)
 
     def test_a_exists_if_b_is_at_least_c_and_d_or_e_is_not_f_or_g(self):
         t = {
@@ -115,7 +115,7 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 0)
-        self.assertEqual(summary[t['name']]['fail'], 257)
-        self.assertEqual(summary[t['name']]['not-relevant'], 16)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 0)
+        self.assertEqual(summary[0][0], 257)
+        self.assertEqual(summary[0][-1], 16)

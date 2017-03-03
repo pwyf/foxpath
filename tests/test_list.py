@@ -18,10 +18,10 @@ class TestLists(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 20)
-        self.assertEqual(summary[t['name']]['fail'], 527)
-        self.assertEqual(summary[t['name']]['not-relevant'], 0)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 20)
+        self.assertEqual(summary[0][0], 527)
+        self.assertEqual(summary[0][-1], 0)
 
     def test_at_least_one_a_is_on_list_b_if_c_is_at_least_d_and_e_or_f_is_not_g_or_h(self):
         t = {
@@ -39,10 +39,10 @@ class TestLists(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 48)
-        self.assertEqual(summary[t['name']]['fail'], 485)
-        self.assertEqual(summary[t['name']]['not-relevant'], 14)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 48)
+        self.assertEqual(summary[0][0], 485)
+        self.assertEqual(summary[0][-1], 14)
 
     def test_at_least_one_a_is_on_list_b(self):
         t = {
@@ -54,10 +54,10 @@ class TestLists(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 48)
-        self.assertEqual(summary[t['name']]['fail'], 499)
-        self.assertEqual(summary[t['name']]['not-relevant'], 0)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 48)
+        self.assertEqual(summary[0][0], 499)
+        self.assertEqual(summary[0][-1], 0)
 
     def test_a_or_b_is_on_list_c_if_d_is_at_least_e(self):
         t = {
@@ -73,7 +73,7 @@ class TestLists(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t], self.LISTS)
         result = foxpath.test_doc(self.FILEPATH, tests)
-        summary = foxpath.summarize_results(result)['by-test']
-        self.assertEqual(summary[t['name']]['pass'], 2)
-        self.assertEqual(summary[t['name']]['fail'], 545)
-        self.assertEqual(summary[t['name']]['not-relevant'], 0)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary[0][1], 2)
+        self.assertEqual(summary[0][0], 545)
+        self.assertEqual(summary[0][-1], 0)
