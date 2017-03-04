@@ -284,7 +284,8 @@ class Foxpath(object):
         activities = doc.xpath('//iati-activity')
         return self.test_activities(activities, tests)
 
-    def summarize_results(self, activities_results):
+    @staticmethod
+    def summarize_results(activities_results):
         scores = {
             1: 0,
             0: 0,
