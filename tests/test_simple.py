@@ -119,3 +119,16 @@ class TestSimple(TestCase):
         self.assertEqual(summary[0][1], 0)
         self.assertEqual(summary[0][0], 257)
         self.assertEqual(summary[0][-1], 16)
+
+    def test_a_is_before_b(self):
+        t = {
+                'name': '_',
+                'expression': '''
+                   `activity-date[@type='start-planned']/@iso-date`
+                   should be chronologically before
+                   `activity-date[@type='start-actual']/@iso-date`
+                ''',
+            }
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
