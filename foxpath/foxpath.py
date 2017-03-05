@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import datetime
 import re
 
@@ -455,10 +456,10 @@ class Foxpath(object):
             iati_identifier = activity.xpath('iati-identifier/text()')[0]
         except Exception:
             iati_identifier = 'Unknown'
-        results = [
-            translate_result(*test_fn(activity), **kwargs)
+        results = OrderedDict([
+            (test_id, translate_result(*test_fn(activity), **kwargs))
             for test_id, test_fn in tests.items()
-        ]
+        ])
         return {
             'results': results,
             'iati-identifier': iati_identifier,
@@ -481,9 +482,9 @@ class Foxpath(object):
             -1: 0,
         }
         summary = [scores.copy() for x in range(len(activities_results[0]['results']))]
-        remove_explanations = type(activities_results[0]['results'][0]) is not int
+        remove_explanations = type(activities_results[0]['results'].values()[0]) is not int
         for activity_results in activities_results:
-            for test_idx, result in enumerate(activity_results['results']):
+            for test_idx, result in enumerate(activity_results['results'].values()):
                 if remove_explanations:
                     summary[test_idx][result[0]] += 1
                 else:
