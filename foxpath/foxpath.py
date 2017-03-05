@@ -482,7 +482,7 @@ class Foxpath(object):
             -1: 0,
         }
         summary = [scores.copy() for x in range(len(activities_results[0]['results']))]
-        remove_explanations = type(activities_results[0]['results'].values()[0]) is not int
+        remove_explanations = type(list(activities_results[0]['results'].values())[0]) is not int
         for activity_results in activities_results:
             for test_idx, result in enumerate(activity_results['results'].values()):
                 if remove_explanations:
