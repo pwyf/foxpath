@@ -481,12 +481,14 @@ class Foxpath(object):
             0: 0,
             -1: 0,
         }
-        summary = [scores.copy() for x in range(len(activities_results[0]['results']))]
+        summary = OrderedDict()
         remove_explanations = type(list(activities_results[0]['results'].values())[0]) is not int
         for activity_results in activities_results:
-            for test_idx, result in enumerate(activity_results['results'].values()):
+            for test_name, result in activity_results['results'].items():
+                if test_name not in summary:
+                    summary[test_name] = scores.copy()
                 if remove_explanations:
-                    summary[test_idx][result[0]] += 1
+                    summary[test_name][result[0]] += 1
                 else:
-                    summary[test_idx][result] += 1
+                    summary[test_name][result] += 1
         return summary
