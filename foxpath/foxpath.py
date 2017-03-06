@@ -45,16 +45,27 @@ class Foxpath(object):
                 raise Exception('That codelist doesn\'t exist')
             return codelist, groups[0]
 
-        def for_any(activity, groups, **kwargs):
-            exps, exps_explain = groups[0](activity)
+        def for_loop(activity, groups, **kwargs):
+            every = groups[0] == 'every'
+            exps, exps_explain = groups[1](activity)
             if len(exps) == 0:
                 return False, 'no {exps_explain} are present'.format(exps_explain=exps_explain)
+
+            if every:
+                explain = 'for every {exps_explain}, {result_explain}'
+            else:
+                explain = 'for not one of {exps_explain}, {result_explain}'
             for exp in exps:
-                result, result_explain = groups[1](exp)
-                if result:
-                    return result, result_explain
-            explain = 'for any {exps_explain}, {result_explain}'.format(exps_explain=exps_explain, result_explain=result_explain)
-            return False, explain
+                result, result_explain = groups[2](exp)
+                if result and not every:
+                    explain = 'for at least one {exps_explain}, {result_explain}'
+                    break
+                if not result and every:
+                    explain = 'for at least one {exps_explain}, the following was not true: {result_explain}'
+                    break
+
+            explain = explain.format(exps_explain=exps_explain, result_explain=result_explain)
+            return result, explain
 
         def either(activity, groups, **kwargs):
             res1, expl1 = groups[0](activity)
@@ -413,7 +424,7 @@ class Foxpath(object):
             (re.compile(r'`[^`]+`$'), xpath),
             (re.compile(r'^\d+$'), integer),
             (re.compile(r'[A-Z]+\d+$'), code),
-            (re.compile(r'^for any (`[^`]+`), (.*)$'), for_any),
+            (re.compile(r'^for (at least one|every) (`[^`]+`), (.*)$'), for_loop),
             (re.compile(r'^(`[^`]+`) (?:should be|is) today, or in the past$'), is_past),
             (re.compile(r'^(.*) or (.*)$'), either),
             (re.compile(r'^(.*) and (.*)$'), both),

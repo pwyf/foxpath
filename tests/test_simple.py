@@ -32,7 +32,7 @@ class TestSimple(TestCase):
             'expression': '''
                 `activity-date[@type="end-planned"]/@iso-date|activity-date[@type="end-planned"]/text()` is less than 12 months ago
                 or `activity-date[@type="end-actual"]/@iso-date|activity-date[@type="end-actual"]/text()` is less than 12 months ago
-                or for any `transaction[transaction-type/@code="D"]|transaction[transaction-type/@code="E"]`,
+                or for at least one `transaction[transaction-type/@code="D"]|transaction[transaction-type/@code="E"]`,
                     `transaction-date/@iso-date` is less than 12 months ago
             ''',
         }
