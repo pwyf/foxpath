@@ -29,9 +29,6 @@ class Foxpath(object):
             # [1:-1] gets rid of the backticks
             return activity.xpath(groups[0][1:-1]), groups[0]
 
-        def braces(activity, groups, **kwargs):
-            return groups[0](activity)
-
         def integer(activity, groups, **kwargs):
             return int(groups[0]), groups[0]
 
@@ -435,7 +432,6 @@ class Foxpath(object):
             return result, explain
 
         mappings = (
-            (re.compile(r'^\(([^\)]*)\)$'), braces),
             (re.compile(r'^if (.*) then (.*)$'), if_then),
             (re.compile(r'\S* codelist$'), codelist),
             (re.compile(r'regex .*$'), regex),
