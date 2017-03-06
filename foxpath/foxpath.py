@@ -482,6 +482,14 @@ class Foxpath(object):
             else:
                 return results[result_value]
 
+        try:
+            title = activity.xpath('title/narrative/text()')[0]
+        except Exception:
+            try:
+                title = activity.xpath('title/text()')[0]
+            except Exception:
+                title = None
+
         hierarchy = activity.xpath('@hierarchy')
         hierarchy = hierarchy[0] if hierarchy != [] else ''
         try:
@@ -496,6 +504,7 @@ class Foxpath(object):
             'results': results,
             'iati-identifier': iati_identifier,
             'hierarchy': hierarchy,
+            'title': title,
         }
 
     def test_activities(self, activities, tests, **kwargs):
