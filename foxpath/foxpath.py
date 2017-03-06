@@ -226,21 +226,25 @@ class Foxpath(object):
             vals, vals_explain = groups[1](activity)
             codelist, codelist_explain = groups[2](activity)
 
-            result = every
-            for val in vals:
-                on_list = check_list(val, codelist)
-                if not on_list and every:
-                    result = False
-                    explain = 'every code used should be on the {codelist_explain}, but at least one ({val}) is not'
-                    break
-                if on_list and not every:
-                    result = True
-                    explain = 'at least one code used is on the {codelist_explain} (e.g. {val})'
-                    break
-            if result and every:
-                explain = 'every code used is on the {codelist_explain}'
-            if not result and not every:
-                explain = 'none of the codes used are on the {codelist_explain} (the following codes are used: {vals_comma})'
+            if len(vals) == 0:
+                result = False
+                explain = 'there are no codes present, so there definitely aren\'t any from the {codelist_explain}'
+            else:
+                result = every
+                for val in vals:
+                    on_list = check_list(val, codelist)
+                    if not on_list and every:
+                        result = False
+                        explain = 'every code used should be from the {codelist_explain}, but at least one ({val}) is not'
+                        break
+                    if on_list and not every:
+                        result = True
+                        explain = 'at least one code used is from the {codelist_explain} (e.g. {val})'
+                        break
+                if result and every:
+                    explain = 'every code used is from the {codelist_explain}'
+                if not result and not every:
+                    explain = 'none of the codes used are from the {codelist_explain} (the following codes are used: {vals_comma})'
             explain = explain.format(codelist_explain=codelist_explain, vals_explain=vals_explain, val=val, vals_comma=', '.join(vals))
             return result, explain
 
