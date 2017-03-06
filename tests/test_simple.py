@@ -19,9 +19,9 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)
-        self.assertEqual(summary[0][1], 273)
-        self.assertEqual(summary[0][0], 0)
-        self.assertEqual(summary[0][-1], 0)
+        self.assertEqual(summary['_'][1], 273)
+        self.assertEqual(summary['_'][0], 0)
+        self.assertEqual(summary['_'][-1], 0)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_or_c_or_d_or_e_for_any_f_is_less_than_g_months_ago(self, mock_date):
@@ -40,9 +40,9 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)
-        self.assertEqual(summary[0][1], 132)
-        self.assertEqual(summary[0][0], 141)
-        self.assertEqual(summary[0][-1], 0)
+        self.assertEqual(summary['_'][1], 132)
+        self.assertEqual(summary['_'][0], 141)
+        self.assertEqual(summary['_'][-1], 0)
 
     def test_a_or_b_exists_if_c_is_at_least_d_and_e_is_not_f(self):
         t = {
@@ -58,9 +58,9 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)
-        self.assertEqual(summary[0][1], 13)
-        self.assertEqual(summary[0][0], 178)
-        self.assertEqual(summary[0][-1], 82)
+        self.assertEqual(summary['_'][1], 13)
+        self.assertEqual(summary['_'][0], 178)
+        self.assertEqual(summary['_'][-1], 82)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_if_c_is_at_least_d(self, mock_date):
@@ -77,9 +77,9 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)
-        self.assertEqual(summary[0][1], 20)
-        self.assertEqual(summary[0][0], 14)
-        self.assertEqual(summary[0][-1], 239)
+        self.assertEqual(summary['_'][1], 20)
+        self.assertEqual(summary['_'][0], 14)
+        self.assertEqual(summary['_'][-1], 239)
 
     @patch('foxpath.foxpath.datetime.date')
     def test_a_or_b_is_available_forward_by_quarters_if_c_is_at_least_d(self, mock_date):
@@ -96,9 +96,9 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)
-        self.assertEqual(summary[0][1], 0)
-        self.assertEqual(summary[0][0], 34)
-        self.assertEqual(summary[0][-1], 239)
+        self.assertEqual(summary['_'][1], 0)
+        self.assertEqual(summary['_'][0], 34)
+        self.assertEqual(summary['_'][-1], 239)
 
     def test_a_exists_if_b_is_at_least_c_and_d_or_e_is_not_f_or_g(self):
         t = {
@@ -116,9 +116,9 @@ class TestSimple(TestCase):
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
         summary = foxpath.summarize_results(result)
-        self.assertEqual(summary[0][1], 0)
-        self.assertEqual(summary[0][0], 257)
-        self.assertEqual(summary[0][-1], 16)
+        self.assertEqual(summary['_'][1], 0)
+        self.assertEqual(summary['_'][0], 257)
+        self.assertEqual(summary['_'][-1], 16)
 
     def test_a_is_before_b(self):
         t = {
