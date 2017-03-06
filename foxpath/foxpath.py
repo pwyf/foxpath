@@ -72,7 +72,7 @@ class Foxpath(object):
             res2, expl2 = groups[1](activity)
             result = res1 or res2
             if not result:
-                explain = '{expl1}. Also, {expl2}'
+                explain = '{expl1}. Alternatively, {expl2}'
             elif res1:
                 explain = '{expl1}'
             elif res2:
