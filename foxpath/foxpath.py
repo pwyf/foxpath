@@ -221,6 +221,7 @@ class Foxpath(object):
                 return any([v in codelist for v in versions])
 
             val = None
+            vals_comma = None
             every = groups[0] == 'every'
             vals, vals_explain = groups[1](activity)
             codelist, codelist_explain = groups[2](activity)
@@ -230,17 +231,17 @@ class Foxpath(object):
                 on_list = check_list(val, codelist)
                 if not on_list and every:
                     result = False
-                    explain = 'every {vals_explain} code used should be on the {codelist_explain}, but at least one ({val}) is not'
+                    explain = 'every code used should be on the {codelist_explain}, but at least one ({val}) is not'
                     break
                 if on_list and not every:
                     result = True
-                    explain = 'at least one {vals_explain} code used is on the {codelist_explain} (e.g. {val})'
+                    explain = 'at least one code used is on the {codelist_explain} (e.g. {val})'
                     break
             if result and every:
-                explain = 'every {vals_explain} code used is on the {codelist_explain}'
+                explain = 'every code used is on the {codelist_explain}'
             if not result and not every:
-                explain = '{vals_explain} doesn\'t use any codes from the {codelist_explain}'
-            explain = explain.format(codelist_explain=codelist_explain, vals_explain=vals_explain, val=val)
+                explain = 'none of the codes used are on the {codelist_explain} (the following codes are used: {vals_comma})'
+            explain = explain.format(codelist_explain=codelist_explain, vals_explain=vals_explain, val=val, vals_comma=', '.join(vals))
             return result, explain
 
         def matches_regex(activity, groups, **kwargs):
