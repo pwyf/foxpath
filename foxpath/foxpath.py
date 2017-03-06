@@ -49,7 +49,7 @@ class Foxpath(object):
             every = groups[0] == 'every'
             exps, exps_explain = groups[1](activity)
             if len(exps) == 0:
-                return False, 'no {exps_explain} are present'.format(exps_explain=exps_explain)
+                return False, 'no {exps_explain} is present'.format(exps_explain=exps_explain)
 
             if every:
                 explain = 'for every {exps_explain}, {result_explain}'
