@@ -72,7 +72,7 @@ class Foxpath(object):
             res2, expl2 = groups[1](activity)
             result = res1 or res2
             if not result:
-                explain = '{expl1}. Alternatively, {expl2}'
+                explain = 'Either {expl1} or {expl2}'
             elif res1:
                 explain = '{expl1}'
             elif res2:
@@ -196,7 +196,7 @@ class Foxpath(object):
             if result:
                 explain = '{vals_explain} is present'
             else:
-                explain = '{vals_explain} should be present, but isn\'t'
+                explain = '{vals_explain} should be present (but isn\'t)'
             explain = explain.format(vals_explain=vals_explain)
             return result, explain
 
@@ -208,9 +208,9 @@ class Foxpath(object):
                     result = False
                     break
             if result:
-                explain = '{vals_explain} is present, but should not be'
+                explain = '{vals_explain} is present (but shouldn\'t be)'
             else:
-                explain = '{vals_explain} is not present'
+                explain = '{vals_explain} isn\'t present'
             explain = explain.format(vals_explain=vals_explain)
             return result, explain
 
