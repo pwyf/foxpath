@@ -36,7 +36,7 @@ class Foxpath(object):
             return groups[0], groups[0]
 
         def regex(activity, groups, **kwargs):
-            return re.compile(groups[0][6:]), groups[0]
+            return re.compile(groups[0][7:-1]), groups[0]
 
         def codelist(activity, groups, codelists, **kwargs):
             # [:-9] gets rid of ' codelist'
@@ -440,7 +440,7 @@ class Foxpath(object):
         mappings = (
             (re.compile(r'^if (.*) then (.*)$'), if_then),
             (re.compile(r'\S* codelist$'), codelist),
-            (re.compile(r'regex .*$'), regex),
+            (re.compile(r'regex `.*`$'), regex),
             (re.compile(r'`[^`]+`$'), xpath),
             (re.compile(r'^\d+$'), integer),
             (re.compile(r'[A-Z]+\d+$'), code),
