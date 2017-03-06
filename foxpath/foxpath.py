@@ -262,19 +262,20 @@ class Foxpath(object):
         # defaults to false
         def is_more_than_x_characters(activity, groups, **kwargs):
             most_chars = None
+            most_str = None
             exps, exps_explain = groups[0](activity)
             reqd_chars, reqd_chars_explain = groups[1](activity)
             if len(exps) == 0:
                 result = False
                 explain = '{exps_explain} is not present, so definitely isn\'t more than {reqd_chars_explain} characters long'
             else:
-                most_chars = max([len(exp) for exp in exps])
+                most_chars, most_str = max([(len(exp), exp) for exp in exps])
                 result = most_chars > reqd_chars
                 if result:
-                    explain = '{exps_explain} is more than {reqd_chars_explain} characters long (it\'s {most_chars})'
+                    explain = '\'{most_str}\' is more than {reqd_chars_explain} characters long (it\'s {most_chars})'
                 if not result:
-                    explain = '{exps_explain} is too short (it\'s only {most_chars} characters long)'
-            explain = explain.format(exps_explain=exps_explain, reqd_chars_explain=reqd_chars_explain, most_chars=most_chars)
+                    explain = '\'{most_str}\' is too short (it\'s only {most_chars} characters long)'
+            explain = explain.format(exps_explain=exps_explain, reqd_chars_explain=reqd_chars_explain, most_chars=most_chars, most_str=most_str)
             return result, explain
 
         # defaults to false
