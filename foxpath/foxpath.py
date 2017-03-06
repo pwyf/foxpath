@@ -18,7 +18,7 @@ class Foxpath(object):
             for test in tests
         }
 
-    def parse(self, test, codelists):
+    def parse(self, test_expression, codelists):
         def mkdate(date_str):
             try:
                 return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
@@ -414,8 +414,8 @@ class Foxpath(object):
             'annually', 'quarterly',
             'date',
         ]
-        if test in ignored_constants:
-            return test
+        if test_expression in ignored_constants:
+            return test_expression
 
         def is_past(activity, groups, **kwargs):
             el, el_explain = groups[0](activity)
@@ -461,14 +461,14 @@ class Foxpath(object):
             (re.compile(r'^(`[^`]+`) (?:should match|matches) the (regex .*)$'), matches_regex),
         )
         for regex, fn in mappings:
-            r = regex.match(test)
+            r = regex.match(test_expression)
             if r:
                 if r.groups():
                     groups = [self.parse(g, codelists) for g in r.groups()]
                 else:
                     groups = [r.group()]
                 return lambda x: fn(x, groups=groups, codelists=codelists)
-        raise Exception('I don\'t understand {}'.format(test))
+        raise Exception('I don\'t understand {}'.format(test_expression))
 
     def test_activity(self, activity, tests, **kwargs):
         def translate_result(result_value, explanation, **kwargs):
