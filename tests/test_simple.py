@@ -132,3 +132,22 @@ class TestSimple(TestCase):
         foxpath = Foxpath()
         tests = foxpath.load_tests([t])
         result = foxpath.test_doc(self.FILEPATH, tests)
+
+    def test_sectors(self):
+        t = {
+                'name': '_',
+                'expression': '''
+                  (`sector` should be present
+                  and for every `transaction`, `sector` should not be present)
+                  or
+                  (`sector` should not be present
+                  and for every `transaction`, `sector` should be present)
+                ''',
+            }
+        foxpath = Foxpath()
+        tests = foxpath.load_tests([t])
+        result = foxpath.test_doc(self.FILEPATH, tests)
+        summary = foxpath.summarize_results(result)
+        self.assertEqual(summary['_'][1], 180)
+        self.assertEqual(summary['_'][0], 93)
+        self.assertEqual(summary['_'][-1], 0)

@@ -203,6 +203,20 @@ class Foxpath(object):
             explain = explain.format(vals_explain=vals_explain)
             return result, explain
 
+        def not_exists(activity, groups, **kwargs):
+            vals, vals_explain = groups[0](activity)
+            result = True
+            for val in vals:
+                if val != '':
+                    result = False
+                    break
+            if result:
+                explain = '{vals_explain} is present, but should not be'
+            else:
+                explain = '{vals_explain} is not present'
+            explain = explain.format(vals_explain=vals_explain)
+            return result, explain
+
         def is_on_list(activity, groups, **kwargs):
             def check_list(val, codelist):
                 val = str(val)
@@ -432,6 +446,7 @@ class Foxpath(object):
             (re.compile(r'^(`[^`]+`) (?:should be|is) today, or in the past$'), is_past),
             (re.compile(r'^(.*) or (.*)$'), either),
             (re.compile(r'^(.*) and (.*)$'), both),
+            (re.compile(r'^(`[^`]+`) (?:should not be|is not) present$'), not_exists),
             (re.compile(r'^(`[^`]+`) (should not be|is not) (\S*)$'), is_not),
             (re.compile(r'^(`[^`]+`) (?:should be|is) chronologically before (`[^`]+`)$'), is_before),
             (re.compile(r'^(`[^`]+`) (should be|is) at least (\d+)$'), is_at_least),
