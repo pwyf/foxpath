@@ -10,6 +10,7 @@ class Foxpath(object):
         whitespace = re.compile(r'\s+')
 
         def strip_and_parse(expression):
+            expression = expression.replace('*', '')
             trimmed_expr = whitespace.sub(' ', expression).strip()
             return self.parse(trimmed_expr, codelists)
 
