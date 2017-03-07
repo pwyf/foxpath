@@ -26,6 +26,9 @@ class Foxpath(object):
             except ValueError:
                 return None
 
+        def for_every_activity(activity, groups, **kwargs):
+            return groups[0](activity)
+
         def xpath(activity, groups, **kwargs):
             # [1:-1] gets rid of the backticks
             return activity.xpath(groups[0][1:-1]), groups[0]
@@ -439,6 +442,7 @@ class Foxpath(object):
             return result, explain
 
         mappings = (
+            (re.compile(r'^for every activity, (.*)$'), for_every_activity),
             (re.compile(r'^if (.*) then (.*)$'), if_then),
             (re.compile(r'\S* codelist$'), codelist),
             (re.compile(r'regex `.*`$'), regex),
