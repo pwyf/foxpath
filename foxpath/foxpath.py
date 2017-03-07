@@ -200,7 +200,7 @@ class Foxpath(object):
             if result:
                 explain = '{vals_explain} is present'
             else:
-                explain = '{vals_explain} should be present (but isn\'t)'
+                explain = '{vals_explain} isn\'t present'
             explain = explain.format(vals_explain=vals_explain)
             return result, explain
 
@@ -212,9 +212,9 @@ class Foxpath(object):
                     result = False
                     break
             if result:
-                explain = '{vals_explain} is present (but shouldn\'t be)'
-            else:
                 explain = '{vals_explain} isn\'t present'
+            else:
+                explain = '{vals_explain} is present'
             explain = explain.format(vals_explain=vals_explain)
             return result, explain
 
