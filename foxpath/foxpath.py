@@ -320,7 +320,7 @@ class Foxpath(object):
             reqd_chars, reqd_chars_explain = groups[1](activity)
             if len(exps) == 0:
                 result = False
-                explain = '{exps_explain} is not present, so definitely isn\'t more than {reqd_chars_explain} characters long'
+                explain = '{exps_explain} is not present'
             else:
                 most_chars, most_str = max([(len(exp), exp) for exp in exps])
                 result = most_chars > reqd_chars
