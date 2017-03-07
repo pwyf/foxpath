@@ -38,6 +38,9 @@ class Foxpath(object):
         def integer(activity, groups, **kwargs):
             return int(groups[0]), groups[0]
 
+        def integer_list(activity, groups, **kwargs):
+            return groups[0], groups[0]
+
         def code(activity, groups, **kwargs):
             return groups[0], groups[0]
 
@@ -133,6 +136,28 @@ class Foxpath(object):
                     explain = 'the activity shouldn\'t have {vals_explain} equal to {const_explain}, but does'
             explain = explain.format(vals_explain=vals_explain, const_explain=const_explain, should_not_is_not=should_not_is_not)
             return result, explain
+
+        def is_one_of(activity, groups, **kwargs):
+            val = None
+            vals, vals_explain = groups[0](activity)
+            consts, const_explain = groups[1](activity)
+            consts_list = consts.split(', ')
+            if len(vals) == 0:
+                explain = '{vals_explain} should be one of {const_explain}. However, the activity doesn\'t contain that element'
+                result = True
+            else:
+                result = False
+                for val in vals:
+                    if val in consts_list:
+                        result = True
+                        break
+                if result:
+                    explain = '{vals_explain} is one of {const_explain} (it\'s {val})'
+                else:
+                    explain = '{vals_explain} is not one of {const_explain} (it\'s {val})'
+            explain = explain.format(vals_explain=vals_explain, const_explain=const_explain, val=val)
+            return result, explain
+
 
         # defaults to true
         def is_at_least(activity, groups, **kwargs):
@@ -448,10 +473,12 @@ class Foxpath(object):
         mappings = (
             (re.compile(r'^for every activity, (.*)$'), for_every_activity),
             (re.compile(r'^if (.*) then (.*)$'), if_then),
+            (re.compile(r'^(`[^`]+`) is one of \((.*)\)$'), is_one_of),
             (re.compile(r'\S* codelist$'), codelist),
             (re.compile(r'regex `.*`$'), regex),
             (re.compile(r'`[^`]+`$'), xpath),
             (re.compile(r'^\d+$'), integer),
+            (re.compile(r'^\d+(?:, \d+)+$'), integer_list),
             (re.compile(r'[A-Z]+\d+$'), code),
             (re.compile(r'^for (at least one|every) (`[^`]+`), (.*)$'), for_loop),
             (re.compile(r'^(`[^`]+`) (?:should be|is) today, or in the past$'), is_past),

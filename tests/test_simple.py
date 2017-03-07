@@ -50,7 +50,7 @@ class TestSimple(TestCase):
         t = {
             'name': '_',
             'expression': '''
-                if `activity-status/@code` is at least 2
+                if `activity-status/@code` is one of (2, 3, 4)
                 and `conditions/@attached` is not 0
                 then `conditions` should be present
                 or `document-link/category[@code="A04"]` should be present
