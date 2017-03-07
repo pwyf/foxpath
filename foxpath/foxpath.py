@@ -396,10 +396,10 @@ class Foxpath(object):
             today = datetime.date.today()
 
             def max_date(dates, default):
+                dates = list(filter(lambda x: x is not None, [mkdate(d) for d in dates]))
                 if dates == []:
                     return default
-                max_date = max(filter(lambda x: x is not None, [mkdate(d) for d in dates]))
-                return max_date if max_date else default
+                return max(dates)
 
             # Window start is from today onwards. We're only interested in budgets
             # that start or end after today.
