@@ -139,11 +139,14 @@ class TestSimple(TestCase):
         t = {
                 'name': '_',
                 'expression': '''
-                  `sector` should be present
-                  and for every `transaction`, `sector` should not be present
-                  or
-                  `sector` should not be present
-                  and for every `transaction`, `sector` should be present
+                 for every activity, `sector` should be present
+                 but if `transaction` is present then
+                 for every `transaction`, `sector` *should not* be present.
+
+                 Alternatively,
+                 `transaction` should be present
+                 and for every `transaction`, `sector` *should* be present
+                 and for every activity, `sector` *should not* be present
                 ''',
             }
         foxpath = Foxpath()

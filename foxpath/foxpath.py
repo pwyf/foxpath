@@ -88,12 +88,18 @@ class Foxpath(object):
             res1, expl1 = groups[0](activity)
             res2, expl2 = groups[1](activity)
             result = res1 and res2
-            if result or not (res1 or res2):
+            if not result:
+                if res1 and res2 is None:
+                    result = True
+                elif res2 and res1 is None:
+                    result = True
+
+            if (res1 and res2) or (not res1 and not res2):
                 explain = '{expl1} and {expl2}'
-            elif not res2:
-                explain = '{expl2}'
+            elif res1 and not res2:
+                explain = '{expl1} but {expl2}'
             else:
-                explain = '{expl1}'
+                explain = '{expl2} but {expl1}'
             explain = explain.format(expl1=expl1, expl2=expl2)
             return result, explain
 
