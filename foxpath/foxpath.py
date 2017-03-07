@@ -117,6 +117,21 @@ class Foxpath(object):
                 return None, ante_explain
             return cons, cons_explain
 
+        def equals(activity, groups, **kwargs):
+            vals, vals_explain = groups[0](activity)
+            const, const_explain = groups[1](activity)
+            result = False
+            for val in vals:
+                if val == str(const):
+                    result = True
+                    break
+            if result:
+                explain = '{vals_explain} is equal to {const_explain}'
+            else:
+                explain = 'the activity has {vals_explain} equal to {const_explain}'
+            explain = explain.format(vals_explain=vals_explain, const_explain=const_explain)
+            return result, explain
+
         # defaults to true
         def is_not(activity, groups, **kwargs):
             vals, vals_explain = groups[0](activity)
@@ -485,6 +500,7 @@ class Foxpath(object):
             (re.compile(r'^(.*)(?: or|\. Alternatively,) (.*)$'), either),
             (re.compile(r'^(.*) (?:and|but) (.*)$'), both),
             (re.compile(r'^(`[^`]+`) (?:should not be|is not) present$'), not_exists),
+            (re.compile(r'^(`[^`]+`) is (\d+)$'), equals),
             (re.compile(r'^(`[^`]+`) (should not be|is not) (\S*)$'), is_not),
             (re.compile(r'^(`[^`]+`) (?:should be|is) chronologically before (`[^`]+`)$'), is_before),
             (re.compile(r'^(`[^`]+`) (should be|is) at least (\d+)$'), is_at_least),
