@@ -96,12 +96,12 @@ class Foxpath(object):
                 elif res2 and res1 is None:
                     result = True
 
-            if (res1 and res2) or (not res1 and not res2):
+            if res1 and res2:
                 explain = '{expl1} and {expl2}'
-            elif res1 and not res2:
-                explain = '{expl1} but {expl2}'
+            elif not res1:
+                explain = '{expl1}'
             else:
-                explain = '{expl2} but {expl1}'
+                explain = '{expl2}'
             explain = explain.format(expl1=expl1, expl2=expl2)
             return result, explain
 
