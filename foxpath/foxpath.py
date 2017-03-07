@@ -111,12 +111,8 @@ class Foxpath(object):
             if not ante:
                 # if the condition fails,
                 # return not relevant
-                result = None
-                explain = '{ante_explain}, so the activity was ignored'.format(ante_explain=ante_explain)
-            else:
-                result = cons
-                explain = cons_explain
-            return result, explain
+                return None, ante_explain
+            return cons, cons_explain
 
         # defaults to true
         def is_not(activity, groups, **kwargs):
