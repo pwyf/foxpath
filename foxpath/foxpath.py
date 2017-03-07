@@ -27,7 +27,9 @@ class Foxpath(object):
                 return None
 
         def for_every_activity(activity, groups, **kwargs):
-            return groups[0](activity)
+            result, explain = groups[0](activity)
+            explain = 'for every activity, ' + explain
+            return result, explain
 
         def xpath(activity, groups, **kwargs):
             # [1:-1] gets rid of the backticks
