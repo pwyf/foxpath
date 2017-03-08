@@ -422,13 +422,18 @@ class Foxpath(object):
 
             def check_after(element, today):
                 dates = element.xpath('period-start/@iso-date|period-end/@iso-date')
-                return any([mkdate(date) >= today for date in dates])
+                dates = list(filter(lambda x: x is not None, [mkdate(d) for d in dates]))
+                return any([date >= today for date in dates])
 
             def max_budget_length(element, max_budget_length):
                 # NB this will error if there's no period-end/@iso-date
-                start = mkdate(element.xpath('period-start/@iso-date')[0])
-                end = mkdate(element.xpath('period-end/@iso-date')[0])
-                return ((end-start).days <= max_budget_length)
+                try:
+                    start = mkdate(element.xpath('period-start/@iso-date')[0])
+                    end = mkdate(element.xpath('period-end/@iso-date')[0])
+                    within_length = ((end-start).days <= max_budget_length)
+                except TypeError:
+                    return False
+                return within_length
 
             # We set a maximum number of days for which a budget can last,
             # depending on the number of quarters that should be covered.
