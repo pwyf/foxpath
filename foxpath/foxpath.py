@@ -502,7 +502,7 @@ class Foxpath(object):
             (re.compile(r'[A-Z]+\d+$'), code),
             (re.compile(r'^for (at least one|every) (`[^`]+`), (.*)$'), for_loop),
             (re.compile(r'^(`[^`]+`) (?:should be|is) today, or in the past$'), is_past),
-            (re.compile(r'^(?:Either\:)(.*)(?: or|\. Alternatively,) (.*)$'), either),
+            (re.compile(r'^(?:Either\:)?(.*)(?: or|\. Alternatively,) (.*)$'), either),
             (re.compile(r'^(.*) (?:and|but) (.*)$'), both),
             (re.compile(r'^(`[^`]+`) (?:should not be|is not) present$'), not_exists),
             (re.compile(r'^(`[^`]+`) is (\d+)$'), equals),
