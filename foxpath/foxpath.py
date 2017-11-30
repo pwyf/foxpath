@@ -174,6 +174,28 @@ class Foxpath(object):
             return result, explain
 
 
+        def is_not_any_of(activity, groups, **kwargs):
+            val = None
+            vals, vals_explain = groups[0](activity)
+            consts, const_explain = groups[1](activity)
+            consts_list = re.split(r', | or ', consts)
+            if len(vals) == 0:
+                explain = '{vals_explain} should not be one of {const_explain}. However, the activity doesn\'t contain that element'
+                result = True
+            else:
+                result = False
+                for val in vals:
+                    if val in consts_list:
+                        result = False
+                        break
+                if result:
+                    explain = '{vals_explain} is not any of {const_explain} (it\'s {val})'
+                else:
+                    explain = '{vals_explain} is one of {const_explain} (it\'s {val})'
+            explain = explain.format(vals_explain=vals_explain, const_explain=const_explain, val=val)
+            return result, explain
+
+
         # defaults to true
         def is_at_least(activity, groups, **kwargs):
             val = None
@@ -494,6 +516,7 @@ class Foxpath(object):
             (re.compile(r'^for every activity, (.*)$'), for_every_activity),
             (re.compile(r'^if (.*) then (.*)$'), if_then),
             (re.compile(r'^(`[^`]+`) is one of (.*)$'), is_one_of),
+            (re.compile(r'^(`[^`]+`) is not any of (.*)$'), is_not_any_of),
             (re.compile(r'\S* codelist$'), codelist),
             (re.compile(r'regex `.*`$'), regex),
             (re.compile(r'`[^`]+`$'), xpath),
