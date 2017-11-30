@@ -156,7 +156,7 @@ class Foxpath(object):
             val = None
             vals, vals_explain = groups[0](activity)
             consts, const_explain = groups[1](activity)
-            consts_list = consts.split(', ')
+            consts_list = re.split(r', | or ', consts)
             if len(vals) == 0:
                 explain = '{vals_explain} should be one of {const_explain}. However, the activity doesn\'t contain that element'
                 result = True
@@ -493,7 +493,7 @@ class Foxpath(object):
         mappings = (
             (re.compile(r'^for every activity, (.*)$'), for_every_activity),
             (re.compile(r'^if (.*) then (.*)$'), if_then),
-            (re.compile(r'^(`[^`]+`) is one of \((.*)\)$'), is_one_of),
+            (re.compile(r'^(`[^`]+`) is one of (.*)$'), is_one_of),
             (re.compile(r'\S* codelist$'), codelist),
             (re.compile(r'regex `.*`$'), regex),
             (re.compile(r'`[^`]+`$'), xpath),
