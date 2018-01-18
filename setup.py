@@ -7,7 +7,7 @@ with open(join(dirname(__file__), 'README.rst')) as f:
 
 setup(
     name="foxpath",
-    version="2.0.1",
+    version="2.0.2",
     packages=find_packages(),
     author="Andy Lulham",
     author_email="andy.lulham@publishwhatyoufund.org",
@@ -18,5 +18,6 @@ setup(
         'lxml==4.1.0',
         'PyYAML==3.12',
         'six==1.11.0',
+        'gherkin-official==4.1.3',
     ],
 )
