@@ -5,6 +5,10 @@ import re
 from gherkin.parser import Parser as GherkinParser
 
 
+class StepException(Exception):
+    pass
+
+
 def given(pattern):
     def decorated(fn):
         Foxpath.mappings.append((re.compile(r'^{}$'.format(pattern)), fn))
@@ -54,17 +58,19 @@ class Foxpath():
                         expr_fn(activity, *expr_groups, **kwargs)
                     else:
                         expr_fn(activity, **kwargs)
-                except Exception as e:
+                except StepException as e:
                     result = False
                     explain = str(e)
-                if step_type == 'given':
-                    if not result:
-                        return None, explain
-                else:
+                if step_type == 'then':
                     if result:
                         return True, ''
                     else:
                         return False, explain
+                else:
+                    if not result:
+                        return None, explain
+                    else:
+                        pass
         return __parse
 
     def _gherkinify_feature(self, feature_txt, **kwargs):
@@ -76,8 +82,10 @@ class Foxpath():
             test_name = test['name']
             test_steps = test['steps']
             ctx = []
+            step_type = 'given'
             for step in test_steps:
-                step_type = step['keyword'].lower().strip()
+                if step['keyword'].lower().strip() == 'then':
+                    step_type = 'then'
                 expr_fn, expr_groups = self._find_matching_expr(
                     Foxpath.mappings, step['text'])
                 ctx.append((step_type, expr_fn, expr_groups))
