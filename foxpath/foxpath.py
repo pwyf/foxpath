@@ -48,7 +48,11 @@ class Foxpath():
         else:
             load_source('', filepath)
 
-    def load_feature(self, feature_txt, codelists={}, today=datetime.today()):
+    def load_feature(self, feature_txt, codelists={}, today=None):
+        if today:
+            today = datetime.strptime(today, '%Y-%m-%d').date()
+        else:
+            today = datetime.today().date()
         kwargs = {
             'codelists': codelists,
             'today': today,

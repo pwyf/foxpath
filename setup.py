@@ -7,7 +7,7 @@ with open(join(dirname(__file__), 'README.rst')) as f:
 
 setup(
     name="foxpath",
-    version="2.0.8",
+    version="2.0.9",
     packages=find_packages(),
     author="Andy Lulham",
     author_email="andy.lulham@publishwhatyoufund.org",
