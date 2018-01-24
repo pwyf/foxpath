@@ -1,8 +1,14 @@
 from datetime import datetime
-from importlib.machinery import SourceFileLoader
 import re
 
 from gherkin.parser import Parser as GherkinParser
+import six
+
+
+if six.PY3:
+    from importlib.machinery import SourceFileLoader
+else:
+    from imp import load_source
 
 
 class StepException(Exception):
@@ -23,6 +29,10 @@ def then(pattern):
     return decorated
 
 
+def call(pattern):
+    pass
+
+
 class Foxpath():
     mappings = []
 
@@ -33,7 +43,10 @@ class Foxpath():
     def _load_step_definitions(self, filepath):
         Foxpath.mappings = []
         # remarkably, this seems to be sufficient
-        SourceFileLoader('', filepath).load_module()
+        if six.PY3:
+            SourceFileLoader('', filepath).load_module()
+        else:
+            load_source('', filepath)
 
     def load_feature(self, feature_txt, codelists={}, today=datetime.today()):
         kwargs = {
