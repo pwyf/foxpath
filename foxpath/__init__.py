@@ -1,2 +1,2 @@
-from foxpath.foxpath import given, then
-from foxpath.foxpath import Foxpath, StepException
+from .foxpath import given, then
+from .foxpath import Foxpath, StepException
